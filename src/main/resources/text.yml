@@ -1,0 +1,53 @@
+# Надписи при взаимодействии с командами
+command:
+  plugin_reload: "<green>Плагин перезапущен!"
+  can_use_only_player: ":error_red: <#FA2F2E>Эту команду может использовать только игрок!"
+  dont_have_permission: ":error_red: <#FA2F2E>Нет прав доступа для использования этой команды!"
+  command_incorrectly: ":error_red: <#FA2F2E>Команда введена неверно!"
+  party_not_created: ":error_red: <#FA2F2E>Вы не находитесь в пати!"
+  party_is_fill: ":error_red: <#FA2F2E>Пати заполнено!"
+
+button:
+  # Надписи головы лидера пати
+  party_player_for_leader: "<!italic><white>Игрок: <yellow>%player%"
+  # Лор головы игроков пати, которые видит лидер
+  party_player_for_leader_lore:
+    - "<!italic><gray>[SHIFT + ЛКМ] - Поставить на место лидера"
+    - "<!italic><gray>[SHIFT + ПКМ] - Кикнуть из пати"
+  # Надписи головы игроков пати
+  party_player_for_player: "<!italic><white>Игрок: <yellow>%player%"
+
+# Название менюшек в плагине, в данных используются плейсхолдеры, которые можно задать в разделе placeholders
+menu:
+  select_type:
+    name: ""
+  party_settings:
+    name_leader: ":l10::party_menu_leader::l100::l50::l7:%button_ready_1%:r10::r7:%button_ready_2%:r10::r7:%button_ready_3%:r10::r7:%button_ready_4%:l30::r10:%button_chat%:l50::l30::l10::l7:%button_func%"
+    name_player: ":l10::party_menu_leader::l100::l50::l7:%button_ready_1%:r10::r7:%button_ready_2%:r10::r7:%button_ready_3%:r10::r7:%button_ready_4%:l30::r10:%button_chat%:l50::l30::l10::l7:%button_func%"
+  select_player:
+    name: ""
+    add_only_friends: ""
+    add_prev_page: ""
+    add_ready_4: ""
+
+# Прейсхолдеры для указания в менюшках
+placeholders:
+  button_ready_1:
+    ready: ":party_accept:"
+    not_ready: ":party_accept_gray:"
+  button_ready_2:
+    ready: ":party_accept:"
+    not_ready: ":party_accept_gray:"
+  button_ready_3:
+    ready: ":party_accept:"
+    not_ready: ":party_accept_gray:"
+  button_ready_4:
+    ready: ":party_accept:"
+    not_ready: ":party_accept_gray:"
+  button_chat:
+    use: ":party_chat:"
+    not_use: ":party_chat_gray:"
+  button_func:
+    ready: ":party_ready:"
+    cancel: ":party_cancel:"
+    start: ":party_start:"

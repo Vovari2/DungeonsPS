@@ -1,0 +1,14 @@
+name: DungeonsPS
+version: '${project.version}'
+main: me.vovari2.dungeonsps.DPS
+api-version: 1.19
+commands:
+  dungeonsps:
+    description: "Use to control plugin DungeonsPS"
+    permission: "dungeonsps.admin"
+    aliases:
+      - "dps"
+depend:
+  - "Parties"
+
+
