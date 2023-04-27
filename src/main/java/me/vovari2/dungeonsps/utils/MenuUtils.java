@@ -1,6 +1,5 @@
 package me.vovari2.dungeonsps.utils;
 
-import com.alessiodp.parties.api.interfaces.Party;
 import me.vovari2.dungeonsps.DPS;
 import me.vovari2.dungeonsps.DPSLocale;
 import me.vovari2.dungeonsps.DPSParty;
@@ -70,40 +69,5 @@ public class MenuUtils {
     }
     private static String getButtonReady(List<DPSPlayer> listPlayers, int number){
         return listPlayers.size() >= number && listPlayers.get(number-1).isReady() ? DPSLocale.getLocaleString("placeholders.button_ready_" + number + ".ready") : DPSLocale.getLocaleString("placeholders.button_ready_" + number + ".not_ready");
-    }
-    public static Inventory formPartyPlayer(List<DPSPlayer> listPlayers){
-        Player player = listPlayers.get(0).getPlayer();
-        DPS plugin = DPS.getInstance();
-
-        Inventory inventory = Bukkit.createInventory(player, 54, DPSLocale.getLocaleComponent("menu.party_settings.name"));
-        ItemStack[] items = new ItemStack[54];
-        inventory.setItem(0, DPS.getItem("menu_close"));
-        inventory.setItem(7, DPS.getItem("open_party_chat"));
-        inventory.setItem(8, DPS.getItem("party_leave"));
-        inventory.setContents(items);
-        return inventory;
-    }
-
-    public static Inventory formSelectPlayer(DPSParty dpsparty){
-        Party party = dpsparty.getParty();
-        Player player = Bukkit.getPlayer(party.getLeader());
-        DPS plugin = DPS.getInstance();
-
-        Inventory inventory = Bukkit.createInventory(player, 54, DPSLocale.getLocaleComponent("menu.party_settings.name"));
-        ItemStack[] items = new ItemStack[54];
-        inventory.setItem(1, DPS.getItem("menu_close"));
-        inventory.setContents(items);
-        return inventory;
-    }
-    public static Inventory formSelectType(DPSParty dpsparty){
-        Party party = dpsparty.getParty();
-        Player player = Bukkit.getPlayer(party.getLeader());
-        DPS plugin = DPS.getInstance();
-
-        Inventory inventory = Bukkit.createInventory(player, 54, DPSLocale.getLocaleComponent("menu.party_settings.name"));
-        ItemStack[] items = new ItemStack[54];
-        inventory.setItem(1, DPS.getItem("menu_close"));
-        inventory.setContents(items);
-        return inventory;
     }
 }

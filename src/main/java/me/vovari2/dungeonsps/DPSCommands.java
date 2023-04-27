@@ -42,14 +42,14 @@ public class DPSCommands implements CommandExecutor {
 
         switch(args[0]) {
             case "create_party": {
-                DPSParty party = DPS.addParty(player);
+                DPS.addParty(player);
             } return true;
             case "join_party": {
 
             } return true;
             case "reload": {
-                DPS.getInstance().getServer().getPluginManager().disablePlugin(DPS.getInstance());
-                DPS.getInstance().getServer().getPluginManager().enablePlugin(DPS.getInstance());
+                plugin.getServer().getPluginManager().disablePlugin(plugin);
+                plugin.getServer().getPluginManager().enablePlugin(plugin);
                 player.sendMessage(DPSLocale.getLocaleComponent("command.plugin_reload"));
             } return true;
             default: player.sendMessage(DPSLocale.getLocaleComponent("command.command_incorrectly"));

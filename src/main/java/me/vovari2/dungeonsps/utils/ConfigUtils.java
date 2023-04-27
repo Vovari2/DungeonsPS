@@ -64,7 +64,7 @@ public class ConfigUtils {
             item.setItemMeta(itemMeta);
             items.put(path, item);
         }
-        DPS.getInstance().items = items;
+        plugin.items = items;
 
 
         // Загрузка всех координат
@@ -74,7 +74,7 @@ public class ConfigUtils {
         HashMap<String, Location> points = new HashMap<>();
         for (String path : section.getKeys(false))
             points.put("path", loadLocation(config.getString("points." + path), path));
-        DPS.getInstance().points = points;
+        plugin.points = points;
     }
     private static Location loadLocation(String str, String name) throws Exception{
         if (str == null || str.equals(""))
@@ -91,8 +91,6 @@ public class ConfigUtils {
 
     // Загрузка локализации плагина
     private static void loadLocale(FileConfiguration configLocale){
-        File dataFolder = DPS.getInstance().getDataFolder();
-
         // Надписи, которые сразу можно конвертировать в Component
         String[] array = new String[] {
                 "command.plugin_reload",

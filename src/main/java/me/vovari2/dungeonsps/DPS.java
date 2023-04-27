@@ -54,8 +54,8 @@ public final class DPS extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() {
-
+    public void onDisable(){
+        TextUtils.sendInfoMessage("Plugin disabled!");
     }
 
     public static void disablePlugin(String message){
