@@ -7,39 +7,16 @@ command:
   party_not_created: ":error_red: <#FA2F2E>Вы не находитесь в пати!"
   party_already_created: ":error_yellow: <#c5b500>Вы уже находитесь в пати!"
   party_is_fill: ":error_red: <#FA2F2E>Пати заполнено!"
-  party_all_notice: ":error_green: <gray>Игрок <#94FF1A>%player% <gray>приглашает всех желающих в пати <#94FF1A><bold>[✓] <#FA2F2E>[×]"
+  party_all_notice: ":error_light_blue: <#42c6ea>Игрок <white>%player% <#42c6ea>собирает группу в <#94FF1A><bold>[✓]"
 
-button:
-  # Надписи головы лидера пати
-  party_name_leader: "<!italic><#f9883a>Игрок: <white>%player%"
-  # Лор головы лидера пати, которые видят игроки
-  party_lore_leader_for_player:
-
-  # Лор головы игроков пати, которые видят игроки
-  party_lore_player_for_player:
-
-  # Надписи головы игроков пати
-  party_name_players: "<!italic><#f9883a>Игрок: <white>%player%"
-  # Лор головы лидера пати, которую видит лидер
-  party_lore_leader_for_leader:
-
-  # Лор головы игроков пати, которые видят лидер
-  party_lore_player_for_leader:
-    - "<!italic><#fcd294>[SHIFT + ЛКМ] <gray>- Поставить на место лидера"
-    - "<!italic><#fcd294>[SHIFT + ПКМ] <gray>- Кикнуть из пати"
-
-  # Имя и лор предмета кнопки, пригласить всех (кулдаун)
-  party_all_invitation_cooldown_name : "<!italic><gray>Уведомление для всех"
-  party_all_invitation_cooldown_lore :
-    - "<!italic><gray>Будет доступно через: <dark_gray>%time%"
 
 # Название менюшек в плагине, в данных используются плейсхолдеры, которые можно задать в разделе placeholders
 menu:
   select_type:
     name: ""
   party_settings:
-    name_leader: ":ps_-8::party_menu_leader::ps_-100::ps_-50::ps_-1:%button_ready_1%:ps_19:%button_ready_2%:ps_19:%button_ready_3%:ps_19:%button_ready_4%:ps_-17:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_-10::ps_11:%button_notice%:ps_1000:{party_settings}"
-    name_player: ":ps_-8::party_menu_leader::ps_-100::ps_-50::ps_-1:%button_ready_1%:ps_19:%button_ready_2%:ps_19:%button_ready_3%:ps_19:%button_ready_4%:ps_-17:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_1000:{party_settings}"
+    name_leader: ":ps_-11::party_menu_leader::ps_-100::ps_-50::ps_-4:%button_ready_1%:ps_19:%button_ready_2%:ps_19:%button_ready_3%:ps_19:%button_ready_4%:ps_-17:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_-10::ps_11:%button_notice%:ps_1000:{party_settings}"
+    name_player: ":ps_-11::party_menu_leader::ps_-100::ps_-50::ps_-4:%button_ready_1%:ps_19:%button_ready_2%:ps_19:%button_ready_3%:ps_19:%button_ready_4%:ps_-17:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_1000:{party_settings}"
   select_player:
     name: ""
     add_only_friends: ""

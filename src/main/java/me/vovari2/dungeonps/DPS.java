@@ -3,6 +3,7 @@ package me.vovari2.dungeonps;
 import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.PartiesAPI;
 import com.google.common.collect.ImmutableList;
+import me.vovari2.dungeonps.objects.DPSItemPH;
 import me.vovari2.dungeonps.objects.DPSParty;
 import me.vovari2.dungeonps.utils.ConfigUtils;
 import me.vovari2.dungeonps.utils.TextUtils;
@@ -22,6 +23,7 @@ public final class DPS extends JavaPlugin {
     public DPSLocale locale;
 
     public HashMap<String, ItemStack> items;
+    public HashMap<String, DPSItemPH> itemsPH;
     public HashMap<String, Location> points;
     public HashMap<String, String> commands;
 
@@ -89,6 +91,9 @@ public final class DPS extends JavaPlugin {
 
     public static ItemStack getItem(String key){
         return plugin.items.get(key);
+    }
+    public static DPSItemPH getItemPH(String key){
+        return plugin.itemsPH.get(key);
     }
     public static Location getLocation(String key) {
         return plugin.points.get(key);

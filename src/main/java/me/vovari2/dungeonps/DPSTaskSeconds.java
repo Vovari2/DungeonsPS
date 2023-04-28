@@ -4,7 +4,6 @@ import me.vovari2.dungeonps.objects.DPSDelayFunction;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class DPSTaskSeconds extends BukkitRunnable {
@@ -22,19 +21,17 @@ public class DPSTaskSeconds extends BukkitRunnable {
         if (seconds > 3599)
             seconds = 0;
 
-        Iterator<Map.Entry<String, DPSDelayFunction>> iterator = delayFunctions.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, DPSDelayFunction> entry = iterator.next();
+        for(Map.Entry<String, DPSDelayFunction> entry : delayFunctions.entrySet()){
             DPSDelayFunction delayFunction = entry.getValue();
             boolean equalsTime = delayFunction.equalsTime();
             if (delayFunction.isAfterPeriod()) {
                 if (equalsTime) {
-                    iterator.remove();
+                    delayFunctions.remove(entry.getKey());
                     DPSDelayFunction.launchFunction(entry.getKey(), delayFunction.getFunctionName());
                 }
             } else {
                 if (equalsTime)
-                    iterator.remove();
+                    delayFunctions.remove(entry.getKey());
                 DPSDelayFunction.launchFunction(entry.getKey(), delayFunction.getFunctionName());
             }
         }

@@ -44,38 +44,25 @@ public class MenuUtils {
 
         // Инициализация предметов
         inventory.setItem(0, DPS.getItem("menu_close"));
-
         if (leader.isWaitCoolDown()){
-            ItemStack item = new ItemStack(Material.FEATHER);
-            ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.setCustomModelData(10004);
-            itemMeta.displayName(DPSLocale.getLocaleComponent("button.party_all_invitation_cooldown_name"));
             int waitSeconds = DPS.getTaskSeconds().getSecondsToTime(DPS.getTaskSeconds().delayFunctions.get(playerName).getTime());
-            itemMeta.lore(DPSLocale.replacePlaceHolderList("button.party_all_invitation_cooldown_lore", "%time%", waitSeconds / 60 + ":" + (waitSeconds % 60 < 10 ? "0" : "") + waitSeconds % 60));
-            item.setItemMeta(itemMeta);
-            inventory.setItem(6, item);
+            inventory.setItem(6, DPS.getItemPH("party_all_invitation_not_use").getItem(new String[]{}, new String[]{waitSeconds / 60 + ":" + (waitSeconds % 60 < 10 ? "0" : "") + waitSeconds % 60}));
         }
-        else inventory.setItem(6, DPS.getItem("party_all_invitation"));
+        inventory.setItem(6, DPS.getItem("party_all_invitation_use"));
         inventory.setItem(7, leader.isChat() ? DPS.getItem("open_public_chat") : DPS.getItem("open_party_chat"));
         inventory.setItem(8, DPS.getItem("party_leave"));
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++){
             if (listPlayers.size() > i){
                 DPSPlayer targetDPSPlayer = listPlayers.get(i);
                 Player targetPlayer = targetDPSPlayer.getPlayer();
-                ItemStack item = new ItemStack(Material.PLAYER_HEAD);
-                SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
-                skullMeta.setOwningPlayer(targetPlayer);
-                skullMeta.displayName(targetDPSPlayer.isLeader() ? DPSLocale.replacePlaceHolder("button.party_name_leader", "%player%", targetPlayer.getName()) : DPSLocale.replacePlaceHolder("button.party_name_player", "%player%", targetPlayer.getName()));
-                skullMeta.lore(targetDPSPlayer.isLeader() ? DPSLocale.getLocaleListComponent("button.party_lore_player_for_leader") : DPSLocale.getLocaleListComponent("button.party_lore_player_for_player"));
-                item.setItemMeta(skullMeta);
-                inventory.setItem(i * 2 + 19, item);
-
+                inventory.setItem(i * 2 + 19, targetDPSPlayer.isLeader() ? DPS.getItemPH("head_leader_for_leader").getItem(targetPlayer, new String[]{targetPlayer.getName()}, new String[]{}) : DPS.getItemPH("head_leader_for_player").getItem(targetPlayer, new String[]{targetPlayer.getName()}, new String[]{}));
                 inventory.setItem(i * 2 + 28, targetDPSPlayer.isReady() ? DPS.getItem("player_ready") : DPS.getItem("player_not_ready"));
             }
             else {
                 inventory.setItem(i * 2 + 19, DPS.getItem("party_invite"));
-                inventory.setItem(i * 2 + 28,  DPS.getItem("player_undefined"));
+                inventory.setItem(i * 2 + 28, DPS.getItem("player_undefined"));
             }
+        }
         ItemStack funcItem = party.allIsReady() ? DPS.getItem("func_start") : leader.isReady() ? DPS.getItem("func_cancel") : DPS.getItem("func_ready");
         inventory.setItem(48, funcItem);
         inventory.setItem(49, funcItem);

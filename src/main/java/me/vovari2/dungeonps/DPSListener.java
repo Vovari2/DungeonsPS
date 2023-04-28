@@ -64,6 +64,7 @@ public class DPSListener implements Listener {
                     return;
 
                 DPS.getTaskSeconds().delayFunctions.put(playerName, new DPSDelayFunction("wait_cooldown_notice", 300, false));
+                dpsPlayer.setWaitCoolDown(true);
                 dpsPlayer.updateMenuPlayer(party);
                 for (Player targetPlayer : Bukkit.getOnlinePlayers())
                     targetPlayer.sendMessage(DPSLocale.replacePlaceHolder("command.party_all_notice", "%player%", playerName));

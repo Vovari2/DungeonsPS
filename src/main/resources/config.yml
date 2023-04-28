@@ -11,6 +11,14 @@ commands:
   leave: "md leave"
 
 
+
+# Координаты
+points:
+  # Координата с местом входа в подземелье
+  enter_dungeon: "world -53.5 115 9.5 90 0"
+
+
+
 # Предметы
 items:
   # Предмет кнопки для закрытия меню
@@ -22,7 +30,7 @@ items:
       - "<!italic><#fcd294>[ЛКМ] <gray>- Закрыть меню"
 
   # Предметы кнопок, отправка приглашения всем игрокам и кулдаун, после отправки
-  party_all_invitation:
+  party_all_invitation_use:
     material: FEATHER
     custom_model_data: 10004
     name: "<!italic><#94FF1A>Уведомление для всех"
@@ -97,7 +105,63 @@ items:
       - "<!italic><#fcd294>[ЛКМ] <gray>- Начать подземелье"
 
 
-# Координаты
-points:
-  # Координата с местом входа в подземелье
-  enter_dungeon: "world -53.5 115 9.5 90 0"
+
+# Предметы с плейсхолдерами
+items_placeholders:
+  # Предметы кнопок, используемые при отображении игроков
+  # Отображение головы лидера для лидера
+  head_leader_for_leader:
+    placeholders:
+      name:
+        - "%player%"
+      lore:
+    material: PLAYER_HEAD
+    custom_model_data: 1
+    name: "<!italic><#f9883a>Игрок: <white>%player%"
+    lore:
+  # Отображение головы лидера для игроков
+  head_leader_for_player:
+    placeholders:
+      name:
+        - "%player%"
+      lore:
+    material: PLAYER_HEAD
+    custom_model_data: 1
+    name: "<!italic><#f9883a>Игрок: <white>%player%"
+    lore:
+  # Отображение головы игроков для лидера
+  head_player_for_leader:
+    placeholders:
+      name:
+        - "%player%"
+      lore:
+    material: PLAYER_HEAD
+    custom_model_data: 1
+    name: "<!italic><#f9883a>Игрок: <white>%player%"
+    lore:
+      - "<!italic><#fcd294>[SHIFT + ЛКМ] <gray>- Поставить на место лидера"
+      - "<!italic><#fcd294>[SHIFT + ПКМ] <gray>- Кикнуть из пати"
+  # Отображение головы игроков для игроков
+  head_player_for_player:
+    placeholders:
+      name:
+        - "%player%"
+      lore:
+    material: PLAYER_HEAD
+    custom_model_data: 1
+    name: "<!italic><#f9883a>Игрок: <white>%player%"
+    lore:
+
+
+  # Предмет кнопки, используемый при отображении кулдауна, после приглашения всех
+  party_all_invitation_not_use:
+    placeholders:
+      name:
+      lore:
+        - "%time%"
+    material: FEATHER
+    custom_model_data: 10004
+    name: "<!italic><gray>Уведомление для всех"
+    lore:
+      - "<!italic><gray>Будет доступно через: <dark_gray>%time%"
+

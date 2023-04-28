@@ -2,6 +2,7 @@ package me.vovari2.dungeonps.utils;
 
 import me.vovari2.dungeonps.DPS;
 import me.vovari2.dungeonps.DPSLocale;
+import me.vovari2.dungeonps.objects.DPSItemPH;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -49,22 +50,15 @@ public class ConfigUtils {
         DPS plugin = DPS.getInstance();
         ConfigurationSection section;
 
-        // Загрузка параметров предметов
-        section = config.getConfigurationSection("items");
+
+        // Загрузка команд для работы с другими плагинами
+        section = config.getConfigurationSection("commands");
         if (section == null)
-            throw new Exception("Value \"items\" must not be empty!");
-        HashMap<String, ItemStack> items = new HashMap<>();
-        for (String path : section.getKeys(false)){
-            String fullPath = "items." + path;
-            ItemStack item = new ItemStack(Material.valueOf(config.getString("items." + path + ".material")));
-            ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.setCustomModelData(checkInt(config.getString(fullPath + ".custom_model_data"), fullPath + ".custom_model_data"));
-            itemMeta.displayName(convertStringToComponent(config.getString(fullPath + ".name"), fullPath + ".name"));
-            itemMeta.lore(convertStringListToComponent(config.getStringList(fullPath + ".lore"), fullPath + ".lore"));
-            item.setItemMeta(itemMeta);
-            items.put(path, item);
-        }
-        plugin.items = items;
+            throw new Exception("Value \"commands\" must not be empty!");
+        HashMap<String, String> commands = new HashMap<>();
+        for (String path : section.getKeys(false))
+            commands.put(path, checkString(config.getString("commands." + path), path));
+        plugin.commands = commands;
 
 
         // Загрузка всех координат
@@ -77,14 +71,42 @@ public class ConfigUtils {
         plugin.points = points;
 
 
-        // Загрузка команд для работы с другими плагинами
-        section = config.getConfigurationSection("commands");
+        // Загрузка параметров предметов
+        section = config.getConfigurationSection("items");
         if (section == null)
-            throw new Exception("Value \"commands\" must not be empty!");
-        HashMap<String, String> commands = new HashMap<>();
-        for (String path : section.getKeys(false))
-            commands.put(path, checkString(config.getString("commands." + path), path));
-        plugin.commands = commands;
+            throw new Exception("Value \"items\" must not be empty!");
+        HashMap<String, ItemStack> items = new HashMap<>();
+        for (String path : section.getKeys(false)){
+            String fullPath = "items." + path;
+            ItemStack item = new ItemStack(Material.valueOf(config.getString(fullPath + ".material")));
+            ItemMeta itemMeta = item.getItemMeta();
+            itemMeta.setCustomModelData(checkInt(config.getString(fullPath + ".custom_model_data"), fullPath + ".custom_model_data"));
+            itemMeta.displayName(convertStringToComponent(config.getString(fullPath + ".name"), fullPath + ".name"));
+            itemMeta.lore(convertStringListToComponent(config.getStringList(fullPath + ".lore"), fullPath + ".lore"));
+            item.setItemMeta(itemMeta);
+            items.put(path, item);
+        }
+        plugin.items = items;
+
+
+        // Загрузка параметров предметов
+        section = config.getConfigurationSection("items_placeholders");
+        if (section == null)
+            throw new Exception("Value \"items_placeholders\" must not be empty!");
+        HashMap<String, DPSItemPH> itemsPH = new HashMap<>();
+        for (String path : section.getKeys(false)){
+            String fullPath = "items_placeholders." + path;
+
+            itemsPH.put(path, new DPSItemPH(
+                    Material.valueOf(config.getString(fullPath + ".material")),
+                    checkString(config.getString(fullPath + ".name"), fullPath + ".name"),
+                    checkListString(config.getStringList(fullPath + ".lore"), fullPath + ".lore"),
+                    checkInt(config.getString(fullPath + ".custom_model_data"), fullPath + ".custom_model_data"),
+                    checkArrayString(config.getStringList(fullPath + ".placeholders.name"), fullPath + ".placeholders.name"),
+                    checkArrayString(config.getStringList(fullPath + ".placeholders.lore"), fullPath + ".placeholders.lore")));
+        }
+        plugin.itemsPH = itemsPH;
+
     }
     private static Location loadLocation(String str, String name) throws Exception{
         if (str == null || str.equals(""))
@@ -99,8 +121,10 @@ public class ConfigUtils {
         }
     }
 
+
+
     // Загрузка локализации плагина
-    private static void loadLocale(FileConfiguration configLocale){
+    private static void loadLocale(FileConfiguration configLocale) throws Exception{
         // Надписи, которые сразу можно конвертировать в Component
         String[] array = new String[] {
                 "command.plugin_reload",
@@ -111,7 +135,6 @@ public class ConfigUtils {
                 "command.party_already_created",
                 "command.party_is_fill",
                 "menu.select_type.name",
-                "button.party_all_invitation_cooldown_name"
         };
         HashMap<String, Object> localeTexts = new HashMap<>();
         for (String str : array)
@@ -122,8 +145,6 @@ public class ConfigUtils {
                 "menu.party_settings.name_leader",
                 "menu.party_settings.name_player",
                 "menu.select_player.name",
-                "button.party_name_leader",
-                "button.party_name_players",
                 "placeholders.button_ready_1.ready",
                 "placeholders.button_ready_1.not_ready",
                 "placeholders.button_ready_2.ready",
@@ -154,11 +175,7 @@ public class ConfigUtils {
 
         // Списки надписей, которые нужно оставить в виде строк
         array = new String[] {
-                "button.party_lore_leader_for_player",
-                "button.party_lore_leader_for_leader",
-                "button.party_lore_player_for_player",
-                "button.party_lore_player_for_leader",
-                "button.party_all_invitation_cooldown_lore"
+                // В будущем тут может что-то будет
         };
         HashMap<String, List<String>> localeListString = new HashMap<>();
         for (String str : array){
@@ -175,22 +192,30 @@ public class ConfigUtils {
         if (text == null)
             throw new Exception("Title \"" + path + "\" in \"config.yml\" not exists!");
         return Integer.parseInt(text);
-    }
-    private static String checkString(String text, String path){
-        if (text == null){
-            TextUtils.sendWarningMessage("Title \"" + path + "\" not exists! An empty string will be given");
-            return "";
-        }
-        if (text.contains("&") || text.contains("§")){
-            TextUtils.sendWarningMessage("Title \"" + path + " must not have char \"&\" or \"§\"! An empty string will be given");
-            return "";
-        }
+    } // Проверяет и переводит строку в число
+    private static String checkString(String text, String path) throws Exception{
+        if (text == null)
+            throw new Exception("Text \"" + path + "\" not exists!");
+        if (text.contains("&") || text.contains("§"))
+            throw new Exception("Title \"" + path + " must not have char \"&\" or \"§\"!");
         return text;
     } // Проверяет строку на null и на символы & или §
-    private static Component convertStringToComponent(String text, String path){
+    private static String[] checkArrayString(List<String> texts, String path) throws Exception{
+        String[] newTexts = new String[texts.size()];
+        for(int i = 0; i < texts.size(); i++)
+            newTexts[i] = texts.get(i);
+        return newTexts;
+    } // Проверяет строки в массиве на null и на символы & или §
+    private static List<String> checkListString(List<String> texts, String path) throws Exception{
+        List<String> newTexts = new ArrayList<>();
+        for (String text : texts)
+            newTexts.add(text);
+        return newTexts;
+    } // Проверяет строки в списке на null и на символы & или §
+    private static Component convertStringToComponent(String text, String path) throws Exception{
         return MiniMessage.miniMessage().deserialize(checkString(text, path));
     } // С проверкой конвертирует строку в Component
-    private static List<Component> convertStringListToComponent(List<String> texts, String path){
+    private static List<Component> convertStringListToComponent(List<String> texts, String path)throws Exception{
         List<Component> listComponent = new ArrayList<>();
         for (String text : texts)
             listComponent.add(convertStringToComponent(text, path));
