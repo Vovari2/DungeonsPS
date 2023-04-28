@@ -1,6 +1,7 @@
-package me.vovari2.dungeonsps;
+package me.vovari2.dungeonps;
 
-import me.vovari2.dungeonsps.utils.MenuUtils;
+import me.vovari2.dungeonps.objects.DPSParty;
+import me.vovari2.dungeonps.utils.MenuUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -41,7 +42,7 @@ public class DPSCommands implements CommandExecutor {
         switch(args[0]) {
             // Команда /dps create_party <Игрок>
             case "create_party": {
-                if (!sender.hasPermission("dungeonsps.admin"))
+                if (!sender.hasPermission("dungeonps.admin"))
                     return true;
                 if (args.length != 2) {
                     sender.sendMessage(DPSLocale.getLocaleComponent("command.command_incorrectly"));
@@ -61,21 +62,21 @@ public class DPSCommands implements CommandExecutor {
 
             // Команда /dps reload
             case "reload": {
-                if (!sender.hasPermission("dungeonsps.admin"))
+                if (!sender.hasPermission("dungeonps.admin"))
                     return true;
                 if (args.length != 1) {
                     sender.sendMessage(DPSLocale.getLocaleComponent("command.command_incorrectly"));
                     return true;
                 }
 
-                plugin.getServer().getPluginManager().disablePlugin(plugin);
-                plugin.getServer().getPluginManager().enablePlugin(plugin);
+                plugin.onDisable();
+                plugin.onEnable();
                 sender.sendMessage(DPSLocale.getLocaleComponent("command.plugin_reload"));
             } return true;
 
             // Команда /dps accept <Игрок>
             case "accept": {
-                if (!sender.hasPermission("dungeonsps.admin") && !sender.hasPermission("dungeonsps.admin"))
+                if (!sender.hasPermission("dungeonps.admin") && !sender.hasPermission("dungeonps.admin"))
                     return true;
                 if (args.length != 2) {
                     sender.sendMessage(DPSLocale.getLocaleComponent("command.command_incorrectly"));
@@ -91,8 +92,8 @@ public class DPSCommands implements CommandExecutor {
             } return true;
 
             // Команда /dps decline <Игрок>
-            case "decline": {
-                if (!sender.hasPermission("dungeonsps.admin") && !sender.hasPermission("dungeonsps.admin"))
+            case "decline":{
+                if (!sender.hasPermission("dungeonps.admin") && !sender.hasPermission("dungeonps.admin"))
                     return true;
                 if (args.length != 2) {
                     sender.sendMessage(DPSLocale.getLocaleComponent("command.command_incorrectly"));

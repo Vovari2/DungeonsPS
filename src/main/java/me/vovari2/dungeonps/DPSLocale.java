@@ -1,4 +1,4 @@
-package me.vovari2.dungeonsps;
+package me.vovari2.dungeonps;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;

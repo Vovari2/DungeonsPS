@@ -1,7 +1,7 @@
-package me.vovari2.dungeonsps.utils;
+package me.vovari2.dungeonps.utils;
 
-import me.vovari2.dungeonsps.DPS;
-import me.vovari2.dungeonsps.DPSLocale;
+import me.vovari2.dungeonps.DPS;
+import me.vovari2.dungeonps.DPSLocale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;

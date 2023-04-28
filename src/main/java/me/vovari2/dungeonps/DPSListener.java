@@ -1,6 +1,9 @@
-package me.vovari2.dungeonsps;
+package me.vovari2.dungeonps;
 
-import me.vovari2.dungeonsps.utils.MenuUtils;
+import me.vovari2.dungeonps.objects.DPSDelayFunction;
+import me.vovari2.dungeonps.objects.DPSParty;
+import me.vovari2.dungeonps.objects.DPSPlayer;
+import me.vovari2.dungeonps.utils.MenuUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +29,7 @@ public class DPSListener implements Listener {
 
     @EventHandler
     public void onMenuDrag(InventoryDragEvent event){
-        if (!MenuUtils.isOurMenu(event.getView().getTitle()))
+        if (MenuUtils.isOurMenu(event.getView().getTitle()))
             return;
 
         if (containsValuesLess54(event.getRawSlots()))
@@ -42,7 +45,7 @@ public class DPSListener implements Listener {
     @EventHandler
     public void onMenuClick(InventoryClickEvent event){
         Player player = (Player)event.getWhoClicked();
-        if (!MenuUtils.isOurMenu(event.getView().getTitle()))
+        if (MenuUtils.isOurMenu(event.getView().getTitle()))
             return;
 
         if (event.getRawSlot() < 54)
@@ -57,10 +60,10 @@ public class DPSListener implements Listener {
         switch(event.getRawSlot()){
             case 0: player.closeInventory(); return;
             case 6: {
-                if (!dpsPlayer.isLeader() || DPSTaskSeconds.waitNotices.containsKey(playerName))
+                if (!dpsPlayer.isLeader() || dpsPlayer.isWaitCoolDown())
                     return;
 
-                DPSTaskSeconds.waitNotices.put(playerName, DPSTaskSeconds.getSecondAfterPeriod(300));
+                DPS.getTaskSeconds().delayFunctions.put(playerName, new DPSDelayFunction("wait_cooldown_notice", 300, false));
                 dpsPlayer.updateMenuPlayer(party);
                 for (Player targetPlayer : Bukkit.getOnlinePlayers())
                     targetPlayer.sendMessage(DPSLocale.replacePlaceHolder("command.party_all_notice", "%player%", playerName));

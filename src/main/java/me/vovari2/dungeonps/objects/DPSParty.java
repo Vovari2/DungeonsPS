@@ -1,8 +1,10 @@
-package me.vovari2.dungeonsps;
+package me.vovari2.dungeonps.objects;
 
 import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
-import me.vovari2.dungeonsps.utils.TextUtils;
+import me.vovari2.dungeonps.DPS;
+import me.vovari2.dungeonps.DPSLocale;
+import me.vovari2.dungeonps.utils.TextUtils;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -82,7 +84,7 @@ public class DPSParty{
 
         player.closeInventory();
         TextUtils.launchCommand(DPS.getDPSCommand("extinction").replaceAll("%player%", player.getName()));
-        DPSTaskSeconds.waitBeforeRemove.put(player.getName(), DPSTaskSeconds.getSecondAfterPeriod(2));
+        DPS.getTaskSeconds().delayFunctions.put(player.getName(), new DPSDelayFunction("wait_after_remove_player", 2, true));
     }
 
     public void fullRemovePlayer(DPSPlayer dpsPlayer){

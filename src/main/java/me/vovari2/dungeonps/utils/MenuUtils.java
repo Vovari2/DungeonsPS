@@ -1,6 +1,8 @@
-package me.vovari2.dungeonsps.utils;
+package me.vovari2.dungeonps.utils;
 
-import me.vovari2.dungeonsps.*;
+import me.vovari2.dungeonps.*;
+import me.vovari2.dungeonps.objects.DPSParty;
+import me.vovari2.dungeonps.objects.DPSPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,8 +17,9 @@ public class MenuUtils {
     public static Inventory formPartyLeader(DPSParty party){
         List<DPSPlayer> listPlayers = party.getPlayers();
         DPSPlayer leader = listPlayers.get(0);
-        Player player = listPlayers.get(0).getPlayer();
+        Player player = leader.getPlayer();
         String playerName = player.getName();
+
 
         // Инициализация переменной инвентаря
         Inventory inventory = Bukkit.createInventory(player, 54, DPSLocale.replacePlaceHolders("menu.party_settings.name_leader",
@@ -36,18 +39,18 @@ public class MenuUtils {
                         getButtonReady(listPlayers, 4),
                         leader.isChat() ? DPSLocale.getLocaleString("placeholders.button_chat.use") : DPSLocale.getLocaleString("placeholders.button_chat.not_use"),
                         party.allIsReady() ? DPSLocale.getLocaleString("placeholders.button_func.start") : leader.isReady() ? DPSLocale.getLocaleString("placeholders.button_func.cancel") : DPSLocale.getLocaleString("placeholders.button_func.ready"),
-                        DPSTaskSeconds.waitNotices.containsKey(playerName) ? DPSLocale.getLocaleString("placeholders.button_notice.not_use") : DPSLocale.getLocaleString("placeholders.button_notice.use")
+                        leader.isWaitCoolDown() ? DPSLocale.getLocaleString("placeholders.button_notice.not_use") : DPSLocale.getLocaleString("placeholders.button_notice.use")
         }));
 
         // Инициализация предметов
         inventory.setItem(0, DPS.getItem("menu_close"));
 
-        if (DPSTaskSeconds.waitNotices.containsKey(playerName)){
+        if (leader.isWaitCoolDown()){
             ItemStack item = new ItemStack(Material.FEATHER);
             ItemMeta itemMeta = item.getItemMeta();
             itemMeta.setCustomModelData(10004);
             itemMeta.displayName(DPSLocale.getLocaleComponent("button.party_all_invitation_cooldown_name"));
-            int waitSeconds = DPSTaskSeconds.getSecondsToTime(DPSTaskSeconds.waitNotices.get(playerName));
+            int waitSeconds = DPS.getTaskSeconds().getSecondsToTime(DPS.getTaskSeconds().delayFunctions.get(playerName).getTime());
             itemMeta.lore(DPSLocale.replacePlaceHolderList("button.party_all_invitation_cooldown_lore", "%time%", waitSeconds / 60 + ":" + (waitSeconds % 60 < 10 ? "0" : "") + waitSeconds % 60));
             item.setItemMeta(itemMeta);
             inventory.setItem(6, item);
@@ -91,6 +94,6 @@ public class MenuUtils {
         return startIndex == -1 || endIndex == -1 ? null : name.substring(startIndex + 1, endIndex);
     }
     public static boolean isOurMenu(String titleMenu){
-        return DPS.getNameMenus().contains(getNameMenu(titleMenu));
+        return !DPS.getNameMenus().contains(getNameMenu(titleMenu));
     }
 }

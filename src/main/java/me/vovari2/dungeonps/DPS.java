@@ -1,13 +1,15 @@
-package me.vovari2.dungeonsps;
+package me.vovari2.dungeonps;
 
 import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.PartiesAPI;
 import com.google.common.collect.ImmutableList;
-import me.vovari2.dungeonsps.utils.ConfigUtils;
-import me.vovari2.dungeonsps.utils.TextUtils;
+import me.vovari2.dungeonps.objects.DPSParty;
+import me.vovari2.dungeonps.utils.ConfigUtils;
+import me.vovari2.dungeonps.utils.TextUtils;
 import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -49,13 +51,16 @@ public final class DPS extends JavaPlugin {
             return;
         }
 
+        if (getServer().getPluginManager().is)
         getServer().getPluginManager().registerEvents(new DPSListener(), this);
 
-        PluginCommand command = getCommand("dungeonsps");
-        command.setExecutor(new DPSCommands(this));
-        command.setTabCompleter(new DPSTabCompleter());
+        PluginCommand command = getCommand("dungeonps");
+        if (command != null) {
+            command.setExecutor(new DPSCommands(this));
+            command.setTabCompleter(new DPSTabCompleter());
+        }
 
-        taskSeconds = new DPSTaskSeconds(this);
+        taskSeconds = new DPSTaskSeconds();
         taskSeconds.runTaskTimer(this, 20, 20);
 
         TextUtils.sendInfoMessage("Plugin enabled for " + (System.currentTimeMillis() - loadingTime) + " ms");
@@ -63,6 +68,7 @@ public final class DPS extends JavaPlugin {
 
     @Override
     public void onDisable(){
+        HandlerList.unregisterAll(this);
         TextUtils.sendInfoMessage("Plugin disabled!");
     }
 
@@ -97,5 +103,9 @@ public final class DPS extends JavaPlugin {
     }
     public static ImmutableList<String> getNameMenus(){
         return plugin.nameMenus;
+    }
+
+    public static DPSTaskSeconds getTaskSeconds(){
+        return plugin.taskSeconds;
     }
 }

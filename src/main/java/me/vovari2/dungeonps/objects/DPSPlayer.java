@@ -1,7 +1,8 @@
-package me.vovari2.dungeonsps;
+package me.vovari2.dungeonps.objects;
 
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
-import me.vovari2.dungeonsps.utils.MenuUtils;
+import me.vovari2.dungeonps.DPS;
+import me.vovari2.dungeonps.utils.MenuUtils;
 import org.bukkit.entity.Player;
 
 public class DPSPlayer {
@@ -9,6 +10,8 @@ public class DPSPlayer {
     private final boolean isLeader;
     private boolean isReady;
     private boolean isChat;
+
+    private boolean isWaitCoolDown;
 
     private final Player player;
     private final PartyPlayer partyPlayer;
@@ -41,6 +44,13 @@ public class DPSPlayer {
         player.performCommand("party chat " + (isChat ? "on" : "off"));
         updateMenuPlayer(DPSParty.get(player.getName()));
     }
+    public boolean isWaitCoolDown() {
+        return isWaitCoolDown;
+    }
+    public void setWaitCoolDown(boolean isWaitCoolDown) {
+        this.isWaitCoolDown = isWaitCoolDown;
+        updateMenuPlayer(DPSParty.get(player.getName()));
+    }
 
     public Player getPlayer() {
         return player;
@@ -50,7 +60,7 @@ public class DPSPlayer {
     }
 
     public void updateMenuPlayer(DPSParty party){
-        if (!MenuUtils.isOurMenu(player.getOpenInventory().getTitle()))
+        if (MenuUtils.isOurMenu(player.getOpenInventory().getTitle()))
             return;
 
         player.openInventory(isLeader ? MenuUtils.formPartyLeader(party) : null);

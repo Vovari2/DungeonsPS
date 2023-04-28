@@ -1,4 +1,4 @@
-package me.vovari2.dungeonsps;
+package me.vovari2.dungeonps;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -19,11 +19,11 @@ public class DPSTabCompleter implements TabCompleter {
 
         if (args.length == 1){
             List<String> subcommands = new ArrayList<>();
-            if (sender.hasPermission("dungeonsps.player")){
+            if (sender.hasPermission("dungeonps.player")){
                 subcommands.add("accept");
                 subcommands.add("decline");
             }
-            if (sender.hasPermission("dungeonsps.admin")){
+            if (sender.hasPermission("dungeonps.admin")){
                 subcommands.add("create_party");
                 subcommands.add("reload");
             }

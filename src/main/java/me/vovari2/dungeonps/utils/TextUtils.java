@@ -1,6 +1,6 @@
-package me.vovari2.dungeonsps.utils;
+package me.vovari2.dungeonps.utils;
 
-import me.vovari2.dungeonsps.DPS;
+import me.vovari2.dungeonps.DPS;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class TextUtils {
