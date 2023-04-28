@@ -1,6 +1,15 @@
 
-# Команда для имитации эффекта затемнения
-command_extinction: "screeneffect fullscreen BLACK 20 10 20 nofreeze %player%"
+# Команды других плагинов, которые необходимы для запуска
+commands:
+  # Команда для имитации эффекта затемнения
+  extinction: "screeneffect fullscreen BLACK 20 10 20 nofreeze %player%"
+
+  # Команда для запуска данжа
+  play: "md play Dungeon_Test %player%"
+
+  # Команда для выхода из данжа
+  leave: "md leave"
+
 
 # Предметы
 items:
@@ -8,84 +17,84 @@ items:
   menu_close:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><red>Закрыть"
+    name: "<!italic><#FA2F2E>Закрыть"
     lore:
-      - "<!italic><gray>[ЛКМ] - Закрыть меню"
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Закрыть меню"
 
-  # Предмет кнопки, отправка приглашения всем желающим
+  # Предметы кнопок, отправка приглашения всем игрокам и кулдаун, после отправки
   party_all_invitation:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><green>Пригласить всех"
+    name: "<!italic><#94FF1A>Уведомление для всех"
     lore:
-      - "<!italic><gray>[ЛКМ] - Отправить сообщение о приглашении в общий чат"
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Отправить приглашение в общий чат"
 
   # Предметы кнопок для переключения между публичным и пати чатами
   open_party_chat:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><white>Выбран чат: <gray>Публичный чат"
+    name: "<!italic><#f9883a>Выбран чат: <white>Публичный чат"
     lore:
-      - "<!italic><gray>[ЛКМ] - Включить чат пати"
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Включить чат пати"
   open_public_chat:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><white>Выбран чат: <#af5dcf>Чат пати"
+    name: "<!italic><#f9883a>Выбран чат: <#65f0f9>Чат пати"
     lore:
-      - "<!italic><gray>[ЛКМ] - Включить публичный чат"
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Включить публичный чат"
 
   # Предмет кнопки для выхода игрока из пати
   party_leave:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><red>Выйти"
+    name: "<!italic><#FA2F2E>Выйти"
     lore:
-      - "<!italic><gray>[ЛКМ] - Выйти из пати"
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Выйти из пати"
 
   # Предмет кнопки, приглашение игрока
   party_invite:
     material: FEATHER
     custom_model_data: 10005
-    name: "<!italic><green>Пригласить игрока"
+    name: "<!italic><#94FF1A>Пригласить игрока"
     lore:
-      - "<!italic><gray>[ЛКМ] - Выбрать игрока"
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Выбрать игрока"
 
   # Предметы кнопок, готов (ready), не готов игрок в пати (not_ready) или слот с игроком пустой (undefined)
   player_ready:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><gray>Статус: <green>Готов"
+    name: "<!italic><#f9883a>Статус: <#94FF1A>Готов"
     lore:
   player_not_ready:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><gray>Статус: <red>Не готов"
+    name: "<!italic><#f9883a>Статус: <#FA2F2E>Не готов"
     lore:
   player_undefined:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><gray>Статус: Неопределенно"
+    name: "<!italic><#f9883a>Статус: <gray>Неопределенно"
     lore:
 
   # Предметы кнопок, функциональные кнопки (готов, отмена, старт)
   func_ready:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><green>Готов"
+    name: "<!italic><#94FF1A>Готов"
     lore:
-      - "<!italic><gray>[ЛКМ] - Нажмите, если готовы"
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Нажмите, если готовы"
   func_cancel:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><red>Отмена"
+    name: "<!italic><#FA2F2E>Отмена"
     lore:
-      - "<!italic><gray>[ЛКМ] - Отменить готовность"
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Отменить готовность"
   func_start:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><green>Старт"
+    name: "<!italic><#94FF1A>Старт"
     lore:
-      - "<!italic><gray>[ЛКМ] - Начать подземелье"
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Начать подземелье"
 
 
 # Координаты

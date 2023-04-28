@@ -2,12 +2,12 @@ package me.vovari2.dungeonsps;
 
 import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.PartiesAPI;
+import com.google.common.collect.ImmutableList;
 import me.vovari2.dungeonsps.utils.ConfigUtils;
 import me.vovari2.dungeonsps.utils.TextUtils;
 import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,8 +21,12 @@ public final class DPS extends JavaPlugin {
 
     public HashMap<String, ItemStack> items;
     public HashMap<String, Location> points;
+    public HashMap<String, String> commands;
 
-    private HashMap<String, DPSParty> parties;
+    public HashMap<String, DPSParty> parties;
+    private ImmutableList<String> nameMenus;
+
+    private DPSTaskSeconds taskSeconds;
 
     @Override
     public void onEnable() {
@@ -36,6 +40,7 @@ public final class DPS extends JavaPlugin {
         }
         partiesAPI = Parties.getApi();
         parties = new HashMap<>();
+        nameMenus = ImmutableList.of("party_settings", "select_type", "select_player");
 
         try{
             ConfigUtils.Initialization();
@@ -49,6 +54,9 @@ public final class DPS extends JavaPlugin {
         PluginCommand command = getCommand("dungeonsps");
         command.setExecutor(new DPSCommands(this));
         command.setTabCompleter(new DPSTabCompleter());
+
+        taskSeconds = new DPSTaskSeconds(this);
+        taskSeconds.runTaskTimer(this, 20, 20);
 
         TextUtils.sendInfoMessage("Plugin enabled for " + (System.currentTimeMillis() - loadingTime) + " ms");
     }
@@ -80,17 +88,14 @@ public final class DPS extends JavaPlugin {
     public static Location getLocation(String key) {
         return plugin.points.get(key);
     }
-
-    public static DPSParty getParty(String key){
-        return plugin.parties.get(key);
+    public static String getDPSCommand(String key) {
+        return plugin.commands.get(key);
     }
-    public static DPSParty addParty(Player player){
-        String playerName = player.getName();
-        getPartiesAPI().createParty(playerName, getPartiesAPI().getPartyPlayer(player.getUniqueId()));
 
-        DPSParty party = new DPSParty(getPartiesAPI().getParty(playerName), player);
-        plugin.parties.put(playerName, party);
-
-        return party;
+    public static HashMap<String, DPSParty> getParties(){
+        return plugin.parties;
+    }
+    public static ImmutableList<String> getNameMenus(){
+        return plugin.nameMenus;
     }
 }

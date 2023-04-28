@@ -2,12 +2,12 @@ package me.vovari2.dungeonsps;
 
 import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
-import org.bukkit.Bukkit;
+import me.vovari2.dungeonsps.utils.TextUtils;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 public class DPSParty{
     private Party party;
@@ -36,6 +36,12 @@ public class DPSParty{
     public List<DPSPlayer> getPlayers(){
         return players;
     }
+    public boolean containsPlayer(String playerName){
+        for(DPSPlayer player : players)
+            if(player.getPlayer().getName().equals(playerName))
+                return true;
+        return false;
+    }
     public boolean allIsReady(){
         for (DPSPlayer player : players)
             if (!player.isReady())
@@ -43,6 +49,12 @@ public class DPSParty{
         return true;
     }
 
+    public DPSPlayer getPlayer(String playerName){
+        for(DPSPlayer player : players)
+            if (player.getPlayer().getName().equals(playerName))
+                return player;
+        return null;
+    }
     public void addPlayer(Player player, boolean isLeader){
         if (players.size() + 1 > 4){
             player.sendMessage(DPSLocale.getLocaleComponent("party_is_full"));
@@ -55,41 +67,84 @@ public class DPSParty{
 
         party.addMember(partyPlayer);
         players.add(new DPSPlayer(player, isLeader));
+
+        updateMenuAllPlayer();
     }
-    public void removePlayer(Player player){
-        PartyPlayer partyPlayer = DPS.getPartiesAPI().getPartyPlayer(player.getUniqueId());
-        if (partyPlayer == null)
+    public void removePlayer(Player player, boolean isQuit){
+        DPSPlayer dpsPlayer = getPlayer(player.getName());
+        if (dpsPlayer == null)
             return;
 
-        if (party.getLeader() == player.getUniqueId()){
-            DPSPlayer newLeader = players.get(1);
-            party.delete();
-
-            DPS.getPartiesAPI().createParty(newLeader.getPlayer().getName(), newLeader.getPartyPlayer());
-            party = DPS.getPartiesAPI().getParty(newLeader.getPlayer().getName());
-            if (party == null)
-                return;
-
-            players.remove(0);
-            for(DPSPlayer targetPlayer : players)
-                party.addMember(targetPlayer.getPartyPlayer());
-
-            if (inDungeon)
-                player.performCommand("md leave");
-            player.teleport(DPS.getLocation("enter_dungeon"));
+        if (isQuit){
+            fullRemovePlayer(dpsPlayer);
             return;
         }
 
-        party.removeMember(partyPlayer);
-        players.removeIf(targetPlayer -> targetPlayer.getPlayer().equals(player));
+        player.closeInventory();
+        TextUtils.launchCommand(DPS.getDPSCommand("extinction").replaceAll("%player%", player.getName()));
+        DPSTaskSeconds.waitBeforeRemove.put(player.getName(), DPSTaskSeconds.getSecondAfterPeriod(2));
+    }
+
+    public void fullRemovePlayer(DPSPlayer dpsPlayer){
+        Player player = dpsPlayer.getPlayer();
+        if (dpsPlayer.isLeader()){
+            if (players.size() > 1){
+                players.remove(0);
+                DPSPlayer newLeader = players.get(0);
+                DPS.getPartiesAPI().createParty(newLeader.getPlayer().getName(), newLeader.getPartyPlayer());
+                party = DPS.getPartiesAPI().getParty(newLeader.getPlayer().getName());
+                if (party == null)
+                    return;
+                for(DPSPlayer targetPlayer : players)
+                    party.addMember(targetPlayer.getPartyPlayer());
+            }
+            else {
+                party.delete();
+                DPS.getParties().remove(player.getName());
+            }
+        }
+        else {
+            party.removeMember(dpsPlayer.getPartyPlayer());
+            players.removeIf(targetPlayer -> targetPlayer.getPlayer().equals(player));
+        }
+
+        if (inDungeon) // ИЗМЕНИТЬ (ДОБАВИТЬ ВКЛЮЧЕНИЕ И ВЫКЛЮЧЕНИЕ ПРАВА НА ИСПОЛЬЗОВАНИЕ КОМАНДЫ /md leave) ЧЕРЕЗ LUCK PERMS
+            player.performCommand(DPS.getDPSCommand("leave"));
         player.teleport(DPS.getLocation("enter_dungeon"));
+        updateMenuAllPlayer();
     }
-    public void updateMenuPlayers(){
-        for (UUID id : party.getMembers()){
-            Player player = Bukkit.getPlayer(id);
-            if (player == null)
-                continue;
-            player.getOpenInventory().getPlayer();
+    public void enterInDungeons(){
+        inDungeon = true;
+        TextUtils.launchCommand(DPS.getDPSCommand("play").replaceAll("%player%", players.get(0).getPlayer().getName()));
+    }
+    public void updateMenuAllPlayer(){
+        for (DPSPlayer dpsPlayer : players)
+            dpsPlayer.updateMenuPlayer(this);
+    }
+
+    public static DPSParty get(String playerName){
+        DPSParty party = DPS.getParties().get(playerName);
+        if (party != null)
+            return party;
+
+        Iterator<DPSParty> iterator = DPS.getParties().values().iterator();
+        while(iterator.hasNext()){
+            DPSParty targetParty = iterator.next();
+            if (targetParty.containsPlayer(playerName))
+                return targetParty;
         }
+        return null;
+    }
+    public static DPSParty add(Player player){
+        String playerName = player.getName();
+        if (DPSParty.get(playerName) != null)
+            return null;
+
+        DPS.getPartiesAPI().createParty(playerName, DPS.getPartiesAPI().getPartyPlayer(player.getUniqueId()));
+
+        DPSParty party = new DPSParty(DPS.getPartiesAPI().getParty(playerName), player);
+        DPS.getParties().put(playerName, party);
+
+        return party;
     }
 }

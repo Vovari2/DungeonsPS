@@ -73,8 +73,18 @@ public class ConfigUtils {
             throw new Exception("Value \"points\" must not be empty!");
         HashMap<String, Location> points = new HashMap<>();
         for (String path : section.getKeys(false))
-            points.put("path", loadLocation(config.getString("points." + path), path));
+            points.put(path, loadLocation(config.getString("points." + path), path));
         plugin.points = points;
+
+
+        // Загрузка команд для работы с другими плагинами
+        section = config.getConfigurationSection("commands");
+        if (section == null)
+            throw new Exception("Value \"commands\" must not be empty!");
+        HashMap<String, String> commands = new HashMap<>();
+        for (String path : section.getKeys(false))
+            commands.put(path, checkString(config.getString("commands." + path), path));
+        plugin.commands = commands;
     }
     private static Location loadLocation(String str, String name) throws Exception{
         if (str == null || str.equals(""))
@@ -97,8 +107,11 @@ public class ConfigUtils {
                 "command.can_use_only_player",
                 "command.dont_have_permission",
                 "command.command_incorrectly",
+                "command.party_not_created",
+                "command.party_already_created",
                 "command.party_is_fill",
-                "menu.select_type.name"
+                "menu.select_type.name",
+                "button.party_all_invitation_cooldown_name"
         };
         HashMap<String, Object> localeTexts = new HashMap<>();
         for (String str : array)
@@ -109,8 +122,8 @@ public class ConfigUtils {
                 "menu.party_settings.name_leader",
                 "menu.party_settings.name_player",
                 "menu.select_player.name",
-                "button.party_player_for_leader",
-                "button.party_player_for_player",
+                "button.party_name_leader",
+                "button.party_name_players",
                 "placeholders.button_ready_1.ready",
                 "placeholders.button_ready_1.not_ready",
                 "placeholders.button_ready_2.ready",
@@ -123,7 +136,10 @@ public class ConfigUtils {
                 "placeholders.button_chat.not_use",
                 "placeholders.button_func.ready",
                 "placeholders.button_func.cancel",
-                "placeholders.button_func.start"
+                "placeholders.button_func.start",
+                "placeholders.button_notice.use",
+                "placeholders.button_notice.not_use",
+                "command.party_all_notice"
         };
         for (String str : array)
             localeTexts.put(str, checkString(configLocale.getString(str), str));
@@ -138,7 +154,11 @@ public class ConfigUtils {
 
         // Списки надписей, которые нужно оставить в виде строк
         array = new String[] {
-                "button.party_player_for_leader_lore"
+                "button.party_lore_leader_for_player",
+                "button.party_lore_leader_for_leader",
+                "button.party_lore_player_for_player",
+                "button.party_lore_player_for_leader",
+                "button.party_all_invitation_cooldown_lore"
         };
         HashMap<String, List<String>> localeListString = new HashMap<>();
         for (String str : array){

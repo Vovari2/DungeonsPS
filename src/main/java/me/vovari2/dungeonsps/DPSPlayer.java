@@ -1,6 +1,7 @@
 package me.vovari2.dungeonsps;
 
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
+import me.vovari2.dungeonsps.utils.MenuUtils;
 import org.bukkit.entity.Player;
 
 public class DPSPlayer {
@@ -28,12 +29,17 @@ public class DPSPlayer {
     }
     public void setReady(boolean isReady) {
         this.isReady = isReady;
+        DPSParty party = DPSParty.get(player.getName());
+        if (party != null)
+            party.updateMenuAllPlayer();
     }
     public boolean isChat() {
         return isChat;
     }
     public void setChat(boolean isChat) {
         this.isChat = isChat;
+        player.performCommand("party chat " + (isChat ? "on" : "off"));
+        updateMenuPlayer(DPSParty.get(player.getName()));
     }
 
     public Player getPlayer() {
@@ -41,5 +47,12 @@ public class DPSPlayer {
     }
     public PartyPlayer getPartyPlayer(){
         return partyPlayer;
+    }
+
+    public void updateMenuPlayer(DPSParty party){
+        if (!MenuUtils.isOurMenu(player.getOpenInventory().getTitle()))
+            return;
+
+        player.openInventory(isLeader ? MenuUtils.formPartyLeader(party) : null);
     }
 }
