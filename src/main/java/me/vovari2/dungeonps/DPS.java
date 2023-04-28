@@ -51,7 +51,6 @@ public final class DPS extends JavaPlugin {
             return;
         }
 
-        if (getServer().getPluginManager().is)
         getServer().getPluginManager().registerEvents(new DPSListener(), this);
 
         PluginCommand command = getCommand("dungeonps");
