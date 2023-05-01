@@ -4,6 +4,7 @@ import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import me.vovari2.dungeonps.DPS;
 import me.vovari2.dungeonps.utils.MenuUtils;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 public class DPSPlayer {
 
@@ -15,11 +16,14 @@ public class DPSPlayer {
 
     private final Player player;
     private final PartyPlayer partyPlayer;
+    private Inventory menuSettings;
 
     public DPSPlayer(Player player, boolean isLeader){
         this.isLeader = isLeader;
         isReady = false;
         isChat = false;
+
+        isWaitCoolDown = DPS.getTaskSeconds().waitCooldownNotice.containsKey(player.getName());
 
         this.player = player;
         partyPlayer = DPS.getPartiesAPI().getPartyPlayer(player.getUniqueId());
@@ -51,6 +55,12 @@ public class DPSPlayer {
         this.isWaitCoolDown = isWaitCoolDown;
         updateMenuPlayer(DPSParty.get(player.getName()));
     }
+    public Inventory getMenuSettings(){
+        return menuSettings;
+    }
+    public void setMenuSettings(Inventory menuSettings){
+        this.menuSettings = menuSettings;
+    }
 
     public Player getPlayer() {
         return player;
@@ -63,6 +73,8 @@ public class DPSPlayer {
         if (MenuUtils.isOurMenu(player.getOpenInventory().getTitle()))
             return;
 
-        player.openInventory(isLeader ? MenuUtils.formPartyLeader(party) : null);
+        if (isLeader)
+            MenuUtils.openPartySettingsLeader(party, this);
+        else MenuUtils.openPartySettingsPlayer(party, this);
     }
 }

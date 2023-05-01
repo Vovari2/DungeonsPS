@@ -84,7 +84,7 @@ public class DPSParty{
 
         player.closeInventory();
         TextUtils.launchCommand(DPS.getDPSCommand("extinction").replaceAll("%player%", player.getName()));
-        DPS.getTaskSeconds().delayFunctions.put(player.getName(), new DPSDelayFunction("wait_after_remove_player", 2, true));
+        DPSDelayFunction.add(player.getName(), "wait_after_remove_player", 2);
     }
 
     public void fullRemovePlayer(DPSPlayer dpsPlayer){
@@ -116,7 +116,7 @@ public class DPSParty{
         updateMenuAllPlayer();
     }
     public void enterInDungeons(){
-        inDungeon = true;
+        setInDungeon(true);
         TextUtils.launchCommand(DPS.getDPSCommand("play").replaceAll("%player%", players.get(0).getPlayer().getName()));
     }
     public void updateMenuAllPlayer(){

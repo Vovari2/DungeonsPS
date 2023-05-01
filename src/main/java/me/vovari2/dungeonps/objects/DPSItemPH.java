@@ -38,7 +38,7 @@ public class DPSItemPH {
         itemMeta.displayName(replacePlaceHolders(name, namePlaceholders, nameValues));
         itemMeta.lore(replacePlaceHoldersInList(lore, lorePlaceholders, loreValues));
         newItem.setItemMeta(itemMeta);
-        return item;
+        return newItem;
     }
 
     // Получение предмета с плейсхолдерами головы игрока
@@ -49,7 +49,7 @@ public class DPSItemPH {
         itemMeta.displayName(replacePlaceHolders(name, namePlaceholders, nameValues));
         itemMeta.lore(replacePlaceHoldersInList(lore, lorePlaceholders, loreValues));
         newItem.setItemMeta(itemMeta);
-        return item;
+        return newItem;
     }
 
 

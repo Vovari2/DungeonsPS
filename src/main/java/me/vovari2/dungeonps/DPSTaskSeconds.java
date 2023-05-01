@@ -1,18 +1,25 @@
 package me.vovari2.dungeonps;
 
 import me.vovari2.dungeonps.objects.DPSDelayFunction;
+import me.vovari2.dungeonps.objects.DPSParty;
+import me.vovari2.dungeonps.objects.DPSPlayer;
+import me.vovari2.dungeonps.utils.MenuUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DPSTaskSeconds extends BukkitRunnable {
 
     public DPSTaskSeconds(){
-        delayFunctions = new HashMap<>();
+        waitCooldownNotice = new HashMap<>();
+        delayFunctions = new ArrayList<>();
     }
 
-    public HashMap<String, DPSDelayFunction> delayFunctions;
+    public HashMap<String, Integer> waitCooldownNotice;
+    public List<DPSDelayFunction> delayFunctions;
     public int seconds;
 
     @Override
@@ -21,20 +28,25 @@ public class DPSTaskSeconds extends BukkitRunnable {
         if (seconds > 3599)
             seconds = 0;
 
-        for(Map.Entry<String, DPSDelayFunction> entry : delayFunctions.entrySet()){
-            DPSDelayFunction delayFunction = entry.getValue();
-            boolean equalsTime = delayFunction.equalsTime();
-            if (delayFunction.isAfterPeriod()) {
-                if (equalsTime) {
-                    delayFunctions.remove(entry.getKey());
-                    DPSDelayFunction.launchFunction(entry.getKey(), delayFunction.getFunctionName());
-                }
-            } else {
-                if (equalsTime)
-                    delayFunctions.remove(entry.getKey());
-                DPSDelayFunction.launchFunction(entry.getKey(), delayFunction.getFunctionName());
-            }
+        // Удаление элементов из списка ожидания кулдауна с уведомления
+        for (Map.Entry<String, Integer> entry : waitCooldownNotice.entrySet()){
+            DPSParty party = DPSParty.get(entry.getKey());
+            if (party == null)
+                continue;
+            DPSPlayer dpsPlayer = party.getPlayer(entry.getKey());
+            MenuUtils.setWaitCooldownNotice(dpsPlayer, dpsPlayer.getMenuSettings());
+            if (entry.getValue() == seconds)
+                waitCooldownNotice.remove(entry.getKey());
         }
+
+        // Функции, которые должны выполниться по окончанию периода
+        delayFunctions.removeIf(delayFunction -> {
+            if (delayFunction.equalsTime()) {
+                delayFunction.launchFunction();
+                return true;
+            }
+            return false;
+        });
     }
     public int getSecondAfterPeriod(int period){
         int time = seconds + period;

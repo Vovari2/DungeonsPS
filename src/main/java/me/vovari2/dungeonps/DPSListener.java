@@ -63,7 +63,8 @@ public class DPSListener implements Listener {
                 if (!dpsPlayer.isLeader() || dpsPlayer.isWaitCoolDown())
                     return;
 
-                DPS.getTaskSeconds().delayFunctions.put(playerName, new DPSDelayFunction("wait_cooldown_notice", 300, false));
+                DPS.getTaskSeconds().waitCooldownNotice.put(playerName, DPS.getTaskSeconds().getSecondAfterPeriod(300));
+                DPSDelayFunction.add(playerName, "wait_cooldown_notice", 300);
                 dpsPlayer.setWaitCoolDown(true);
                 dpsPlayer.updateMenuPlayer(party);
                 for (Player targetPlayer : Bukkit.getOnlinePlayers())
