@@ -1,6 +1,9 @@
 package me.vovari2.dungeonps.objects;
 
 import me.vovari2.dungeonps.DPS;
+import me.vovari2.dungeonps.utils.MenuUtils;
+import me.vovari2.dungeonps.utils.TextUtils;
+import org.bukkit.entity.Player;
 
 public class DPSDelayFunction {
     private final String playerName;
@@ -32,7 +35,34 @@ public class DPSDelayFunction {
                 dpsPlayer.updateMenuPlayer(party);
             } return;
             case "wait_after_remove_player":
-                party.fullRemovePlayer(dpsPlayer);
+                party.fullRemovePlayer(dpsPlayer); return;
+            case "teleport_enter_out": {
+                Player player = dpsPlayer.getPlayer();
+                if (player == null)
+                    return;
+                player.teleport(DPS.getDungeon(party.getNameDungeon()).getEnterOut());
+            } return;
+            case "start_dungeon": {
+                Player player = dpsPlayer.getPlayer();
+                if (player == null)
+                    return;
+                party.setInDungeon(true);
+                TextUtils.launchCommand(DPS.getDPSCommand("play").replaceAll("%player%", party.getPlayers().get(0).getPlayer().getName()));
+            } return;
+            case "teleport_start_party": {
+                Player player = dpsPlayer.getPlayer();
+                if (player == null)
+                    return;
+                player.teleport(DPS.getDungeon(party.getNameDungeon()).getPartyStartRoom());
+                MenuUtils.openPartyStart(player);
+            } return;
+            case "teleport_settings_party":{
+                Player player = dpsPlayer.getPlayer();
+                if (player == null)
+                    return;
+                player.teleport(DPS.getDungeon(party.getNameDungeon()).getPartySettingsRoom());
+                MenuUtils.openPartySettingsPlayer(party, dpsPlayer);
+            }
         }
     }
 

@@ -7,21 +7,18 @@ command:
   party_not_created: ":error_red: <#FA2F2E>Вы не находитесь в пати!"
   party_already_created: ":error_yellow: <#c5b500>Вы уже находитесь в пати!"
   party_is_fill: ":error_red: <#FA2F2E>Пати заполнено!"
-  party_all_notice: ":error_light_blue: <#42c6ea>Игрок <white>%player% <#42c6ea>собирает группу в <#94FF1A><bold>[✓]"
+  party_all_notice: "\n:dungeons_icon: <white>%player% <#7289da>собирает группу в данж <underlined><#b8ddfc>Grim Spirit Dungeon<reset>\n:dungeons_icon: <#42c6ea>[Присоединиться]"
 
 
 # Название менюшек в плагине, в данных используются плейсхолдеры, которые можно задать в разделе placeholders
 menu:
-  select_type:
-    name: ""
+  party_start:
+    name: ":ps_-8::start_dungeon::ps_1000:{party_start}"
   party_settings:
     name_leader: ":ps_-11::party_menu_leader::ps_-100::ps_-50::ps_-4:%button_ready_1%:ps_19:%button_ready_2%:ps_19:%button_ready_3%:ps_19:%button_ready_4%:ps_-17:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_-10::ps_11:%button_notice%:ps_1000:{party_settings}"
     name_player: ":ps_-11::party_menu_leader::ps_-100::ps_-50::ps_-4:%button_ready_1%:ps_19:%button_ready_2%:ps_19:%button_ready_3%:ps_19:%button_ready_4%:ps_-17:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_1000:{party_settings}"
-  select_player:
+  party_players:
     name: ""
-    add_only_friends: ""
-    add_prev_page: ""
-    add_ready_4: ""
 
 # Прейсхолдеры для указания в менюшках
 placeholders:

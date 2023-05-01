@@ -3,7 +3,6 @@ package me.vovari2.dungeonps;
 import me.vovari2.dungeonps.objects.DPSParty;
 import me.vovari2.dungeonps.objects.DPSPlayer;
 import me.vovari2.dungeonps.utils.MenuUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -44,26 +43,6 @@ public class DPSCommands implements CommandExecutor {
         }
 
         switch(args[0]) {
-            // Команда /dps create_party <Игрок>
-            case "create_party": {
-                if (!sender.hasPermission("dungeonps.admin"))
-                    return true;
-                if (args.length != 2) {
-                    sender.sendMessage(DPSLocale.getLocaleComponent("command.command_incorrectly"));
-                    return true;
-                }
-                Player targetPlayer = Bukkit.getPlayer(args[1]);
-                if (targetPlayer == null)
-                    return true;
-                DPSParty party = DPSParty.add(targetPlayer);
-                if (party == null){
-                    sender.sendMessage(DPSLocale.getLocaleComponent("command.party_already_created"));
-                    return true;
-                }
-
-                MenuUtils.openPartySettingsLeader(party, party.getPlayer(targetPlayer.getName()));
-            } return true;
-
             // Команда /dps reload
             case "reload": {
                 if (!sender.hasPermission("dungeonps.admin"))

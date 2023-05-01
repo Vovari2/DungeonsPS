@@ -15,18 +15,23 @@ public class DPSParty{
     private Party party;
     private final List<DPSPlayer> players;
 
+    private final String nameDungeon;
     private boolean inDungeon;
 
-    public DPSParty(Party party, Player leader){
+    public DPSParty(Party party, String nameDungeon, Player leader){
         this.party = party;
         players = new ArrayList<>();
 
+        this.nameDungeon = nameDungeon;
         inDungeon = false;
         addPlayer(leader, true);
     }
 
     public Party getParty(){
         return party;
+    }
+    public String getNameDungeon(){
+        return nameDungeon;
     }
     public boolean getInDungeon(){
         return inDungeon;
@@ -112,7 +117,8 @@ public class DPSParty{
 
         if (inDungeon) // ИЗМЕНИТЬ (ДОБАВИТЬ ВКЛЮЧЕНИЕ И ВЫКЛЮЧЕНИЕ ПРАВА НА ИСПОЛЬЗОВАНИЕ КОМАНДЫ /md leave) ЧЕРЕЗ LUCK PERMS
             player.performCommand(DPS.getDPSCommand("leave"));
-        player.teleport(DPS.getLocation("enter_dungeon"));
+
+        player.teleport(DPS.getDungeon(nameDungeon).getEnterOut());
         updateMenuAllPlayer();
     }
     public void enterInDungeons(){
@@ -137,14 +143,14 @@ public class DPSParty{
         }
         return null;
     }
-    public static DPSParty add(Player player){
+    public static DPSParty add(Player player, String nameDungeon){
         String playerName = player.getName();
         if (DPSParty.get(playerName) != null)
             return null;
 
         DPS.getPartiesAPI().createParty(playerName, DPS.getPartiesAPI().getPartyPlayer(player.getUniqueId()));
 
-        DPSParty party = new DPSParty(DPS.getPartiesAPI().getParty(playerName), player);
+        DPSParty party = new DPSParty(DPS.getPartiesAPI().getParty(playerName), nameDungeon, player);
         DPS.getParties().put(playerName, party);
 
         return party;

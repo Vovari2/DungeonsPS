@@ -3,11 +3,11 @@ package me.vovari2.dungeonps;
 import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.PartiesAPI;
 import com.google.common.collect.ImmutableList;
+import me.vovari2.dungeonps.objects.DPSDungeon;
 import me.vovari2.dungeonps.objects.DPSItemPH;
 import me.vovari2.dungeonps.objects.DPSParty;
 import me.vovari2.dungeonps.utils.ConfigUtils;
 import me.vovari2.dungeonps.utils.TextUtils;
-import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.HandlerList;
@@ -24,7 +24,7 @@ public final class DPS extends JavaPlugin {
 
     public HashMap<String, ItemStack> items;
     public HashMap<String, DPSItemPH> itemsPH;
-    public HashMap<String, Location> points;
+    public HashMap<String, DPSDungeon> dungeons;
     public HashMap<String, String> commands;
 
     public HashMap<String, DPSParty> parties;
@@ -44,7 +44,7 @@ public final class DPS extends JavaPlugin {
         }
         partiesAPI = Parties.getApi();
         parties = new HashMap<>();
-        nameMenus = ImmutableList.of("party_settings", "select_type", "select_player");
+        nameMenus = ImmutableList.of("party_settings", "party_start", "party_players");
 
         try{
             ConfigUtils.Initialization();
@@ -70,6 +70,7 @@ public final class DPS extends JavaPlugin {
     @Override
     public void onDisable(){
         HandlerList.unregisterAll(this);
+        taskSeconds.cancel();
         TextUtils.sendInfoMessage("Plugin disabled!");
     }
 
@@ -95,8 +96,8 @@ public final class DPS extends JavaPlugin {
     public static DPSItemPH getItemPH(String key){
         return plugin.itemsPH.get(key);
     }
-    public static Location getLocation(String key) {
-        return plugin.points.get(key);
+    public static DPSDungeon getDungeon(String key) {
+        return plugin.dungeons.get(key);
     }
     public static String getDPSCommand(String key) {
         return plugin.commands.get(key);
@@ -104,6 +105,9 @@ public final class DPS extends JavaPlugin {
 
     public static HashMap<String, DPSParty> getParties(){
         return plugin.parties;
+    }
+    public static HashMap<String, DPSDungeon> getDungeons(){
+        return plugin.dungeons;
     }
     public static ImmutableList<String> getNameMenus(){
         return plugin.nameMenus;

@@ -2,6 +2,7 @@ package me.vovari2.dungeonps.utils;
 
 import me.vovari2.dungeonps.DPS;
 import me.vovari2.dungeonps.DPSLocale;
+import me.vovari2.dungeonps.objects.DPSDungeon;
 import me.vovari2.dungeonps.objects.DPSItemPH;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -62,13 +63,21 @@ public class ConfigUtils {
 
 
         // Загрузка всех координат
-        section = config.getConfigurationSection("points");
+        section = config.getConfigurationSection("dungeons");
         if (section == null)
-            throw new Exception("Value \"points\" must not be empty!");
-        HashMap<String, Location> points = new HashMap<>();
-        for (String path : section.getKeys(false))
-            points.put(path, loadLocation(config.getString("points." + path), path));
-        plugin.points = points;
+            throw new Exception("Value \"dungeons\" must not be empty!");
+        HashMap<String, DPSDungeon> dungeons = new HashMap<>();
+        for (String path : section.getKeys(false)){
+            dungeons.put(path, new DPSDungeon(
+                    path,
+                    checkString(config.getString("dungeons." + path + ".name"), "dungeons." + path + ".name"),
+                    checkInt(config.getString("dungeons." + path + ".enter_in_distance"), "dungeons." + path + ".enter_in_distance"),
+                    loadLocation(config.getString("dungeons." + path + ".enter_in_dungeon"), "dungeons." + path + ".enter_in_dungeon"),
+                    loadLocation(config.getString("dungeons." + path + ".enter_out_dungeon"), "dungeons." + path + ".enter_out_dungeon"),
+                    loadLocation(config.getString("dungeons." + path + ".party_start"), "dungeons." + path + ".party_start"),
+                    loadLocation(config.getString("dungeons." + path + ".party_settings"), "dungeons." + path + ".party_settings")));
+        }
+        plugin.dungeons = dungeons;
 
 
         // Загрузка параметров предметов
@@ -110,7 +119,7 @@ public class ConfigUtils {
     }
     private static Location loadLocation(String str, String name) throws Exception{
         if (str == null || str.equals(""))
-            throw new Exception("Failed to load point \"points." + name + "\"!");
+            throw new Exception("Failed to load point \"" + name + "\"!");
 
         try{
             String[] arrayStr = str.trim().split(" ");
@@ -134,7 +143,7 @@ public class ConfigUtils {
                 "command.party_not_created",
                 "command.party_already_created",
                 "command.party_is_fill",
-                "menu.select_type.name",
+                "menu.party_start.name"
         };
         HashMap<String, Object> localeTexts = new HashMap<>();
         for (String str : array)
@@ -144,7 +153,7 @@ public class ConfigUtils {
         array = new String[] {
                 "menu.party_settings.name_leader",
                 "menu.party_settings.name_player",
-                "menu.select_player.name",
+                "menu.party_players.name",
                 "placeholders.button_ready_1.ready",
                 "placeholders.button_ready_1.not_ready",
                 "placeholders.button_ready_2.ready",

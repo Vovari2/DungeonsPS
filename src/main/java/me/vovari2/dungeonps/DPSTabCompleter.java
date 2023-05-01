@@ -23,17 +23,15 @@ public class DPSTabCompleter implements TabCompleter {
                 subcommands.add("accept");
                 subcommands.add("decline");
             }
-            if (sender.hasPermission("dungeonps.admin")){
-                subcommands.add("create_party");
+            if (sender.hasPermission("dungeonps.admin"))
                 subcommands.add("reload");
-            }
             return subcommands;
         }
         if (args.length == 2){
             switch(args[0]){
                 case "accept":
                     case "decline":
-                        case "create_party": return getPlayerStringList();
+                        return getPlayerStringList();
             }
         }
         return new ArrayList<>();

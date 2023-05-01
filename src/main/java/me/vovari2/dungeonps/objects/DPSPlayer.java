@@ -70,7 +70,7 @@ public class DPSPlayer {
     }
 
     public void updateMenuPlayer(DPSParty party){
-        if (MenuUtils.isOurMenu(player.getOpenInventory().getTitle()))
+        if (MenuUtils.isNotOurMenu(MenuUtils.getNameMenu(player.getOpenInventory().getTitle())))
             return;
 
         if (isLeader)

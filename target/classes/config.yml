@@ -2,7 +2,7 @@
 # Команды других плагинов, которые необходимы для запуска
 commands:
   # Команда для имитации эффекта затемнения
-  extinction: "screeneffect fullscreen BLACK 20 10 20 nofreeze %player%"
+  extinction: "screeneffect fullscreen BLACK 20 15 20 nofreeze %player%"
 
   # Команда для запуска данжа
   play: "md play Dungeon_Test %player%"
@@ -11,12 +11,14 @@ commands:
   leave: "md leave"
 
 
-
-# Координаты
-points:
-  # Координата с местом входа в подземелье
-  enter_dungeon: "world -53.5 115 9.5 90 0"
-
+dungeons:
+  grim_spirit_dungeon:
+    name: "Grim Spirit Dungeon"
+    enter_in_distance: 2
+    enter_in_dungeon: "world -48.5 116 9.5 0 0"
+    enter_out_dungeon: "world -53.5 115 9.5 90 0"
+    party_start: "world -3.5 114 9.5 -90 0"
+    party_settings: "world 4.5 114 9.5 -90 0"
 
 
 # Предметы
@@ -103,6 +105,27 @@ items:
     name: "<!italic><#94FF1A>Старт"
     lore:
       - "<!italic><#fcd294>[ЛКМ] <gray>- Начать подземелье"
+
+
+  # Предметы кнопок для менюшки при выборе одиночки или коорператива
+  start_single_player:
+    material: FEATHER
+    custom_model_data: 10004
+    name: "<!italic><#94FF1A>Одиночное прохождение данжа"
+    lore:
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Начать прохождени данжа"
+  start_multiplayer_player:
+    material: FEATHER
+    custom_model_data: 10004
+    name: "<!italic><#94FF1A>Коорпоротивное прохождение данжа"
+    lore:
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Создать пати для своих друзей"
+  start_return_back:
+    material: FEATHER
+    custom_model_data: 10004
+    name: "<!italic><#94FF1A>Вернуться назад"
+    lore:
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Вернуться ко входу в данж"
 
 
 

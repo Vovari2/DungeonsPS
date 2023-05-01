@@ -11,6 +11,33 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public class MenuUtils {
+    public static void openPartyStart(Player player){
+        Inventory inventory = Bukkit.createInventory(player, 36, DPSLocale.getLocaleComponent("menu.party_start.name"));
+
+        player.openInventory(inventory);
+
+        ItemStack item = DPS.getItem("start_single_player");
+        inventory.setItem(1, item);
+        inventory.setItem(2, item);
+        inventory.setItem(3, item);
+        inventory.setItem(10, item);
+        inventory.setItem(11, item);
+        inventory.setItem(12, item);
+
+        item = DPS.getItem("start_multiplayer_player");
+        inventory.setItem(5, item);
+        inventory.setItem(6, item);
+        inventory.setItem(7, item);
+        inventory.setItem(14, item);
+        inventory.setItem(15, item);
+        inventory.setItem(16, item);
+
+        item = DPS.getItem("start_return_back");
+        inventory.setItem(30, item);
+        inventory.setItem(31, item);
+        inventory.setItem(32, item);
+    }
+
     // Менюшка настроек пати для лидера
     public static void openPartySettingsLeader(DPSParty party, DPSPlayer leader){
         List<DPSPlayer> listPlayers = party.getPlayers();
@@ -37,7 +64,6 @@ public class MenuUtils {
                         party.allIsReady() ? DPSLocale.getLocaleString("placeholders.button_func.start") : leader.isReady() ? DPSLocale.getLocaleString("placeholders.button_func.cancel") : DPSLocale.getLocaleString("placeholders.button_func.ready"),
                         leader.isWaitCoolDown() ? DPSLocale.getLocaleString("placeholders.button_notice.not_use") : DPSLocale.getLocaleString("placeholders.button_notice.use")
         }));
-
         for (int i = 0; i < 4; i++){
             if (listPlayers.size() > i){
                 DPSPlayer targetDPSPlayer = listPlayers.get(i);
@@ -63,6 +89,7 @@ public class MenuUtils {
         inventory.setItem(48, funcItem);
         inventory.setItem(49, funcItem);
         inventory.setItem(50, funcItem);
+
         leader.setMenuSettings(inventory);
     }
 
@@ -80,7 +107,7 @@ public class MenuUtils {
                         "%button_ready_3%",
                         "%button_ready_4%",
                         "%button_chat%",
-                        "%button_func%",
+                        "%button_func%"
                 } ,
                 new String[]{
                         getButtonReady(listPlayers, 1),
@@ -117,12 +144,15 @@ public class MenuUtils {
         inventory.setItem(50, funcItem);
         dpsPlayer.setMenuSettings(inventory);
     }
+
+    // Формирование кнопки готов у игрока
     private static String getButtonReady(List<DPSPlayer> listPlayers, int number){
         return listPlayers.size() >= number && listPlayers.get(number-1).isReady() ? DPSLocale.getLocaleString("placeholders.button_ready_" + number + ".ready") : DPSLocale.getLocaleString("placeholders.button_ready_" + number + ".not_ready");
     }
-
     // Формирование кнопки уведомить всех
     public static void setWaitCooldownNotice(DPSPlayer dpsPlayer, Inventory inventory){
+        if (inventory == null)
+            return;
         if (dpsPlayer.isWaitCoolDown()){
             int waitSeconds = DPS.getTaskSeconds().getSecondsToTime(DPS.getTaskSeconds().waitCooldownNotice.get(dpsPlayer.getPlayer().getName()));
             inventory.setItem(6, DPS.getItemPH("party_all_invitation_not_use").getItem(new String[]{}, new String[]{waitSeconds / 60 + ":" + (waitSeconds % 60 < 10 ? "0" : "") + waitSeconds % 60}));
@@ -137,7 +167,7 @@ public class MenuUtils {
 
         return startIndex == -1 || endIndex == -1 ? null : name.substring(startIndex + 1, endIndex);
     }
-    public static boolean isOurMenu(String titleMenu){
-        return !DPS.getNameMenus().contains(getNameMenu(titleMenu));
+    public static boolean isNotOurMenu(String titleMenu){
+        return !DPS.getNameMenus().contains(titleMenu);
     }
 }
