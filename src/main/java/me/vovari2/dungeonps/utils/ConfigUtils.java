@@ -203,13 +203,13 @@ public class ConfigUtils {
     private static String[] checkArrayString(List<String> texts, String path) throws Exception{
         String[] newTexts = new String[texts.size()];
         for(int i = 0; i < texts.size(); i++)
-            newTexts[i] = texts.get(i);
+            newTexts[i] = checkString(texts.get(i), path);
         return newTexts;
     } // Проверяет строки в массиве на null и на символы & или §
     private static List<String> checkListString(List<String> texts, String path) throws Exception{
         List<String> newTexts = new ArrayList<>();
         for (String text : texts)
-            newTexts.add(text);
+            newTexts.add(checkString(text, path));
         return newTexts;
     } // Проверяет строки в списке на null и на символы & или §
     private static Component convertStringToComponent(String text, String path) throws Exception{
