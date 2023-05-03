@@ -19,6 +19,9 @@ public class DPSDelayFunction {
     public boolean equalsTime(){
         return this.time == DPS.getTaskSeconds().seconds;
     }
+    public boolean equalsPlayer(String playerName){
+        return this.playerName.equals(playerName);
+    }
     public boolean equals(String playerName, String functionName){
         return this.playerName.equals(playerName) && this.functionName.equals(functionName);
     }
@@ -61,7 +64,9 @@ public class DPSDelayFunction {
                 if (player == null)
                     return;
                 player.teleport(DPS.getDungeon(party.getNameDungeon()).getPartySettingsRoom());
-                MenuUtils.openPartySettingsPlayer(party, dpsPlayer);
+                if (dpsPlayer.isLeader())
+                    MenuUtils.openPartySettingsLeader(party, dpsPlayer);
+                else MenuUtils.openPartySettingsPlayer(party, dpsPlayer);
             }
         }
     }
@@ -69,6 +74,12 @@ public class DPSDelayFunction {
     public static DPSDelayFunction get(String playerName, String functionName){
         for (DPSDelayFunction function : DPS.getTaskSeconds().delayFunctions)
             if(function.equals(playerName, functionName))
+                return function;
+        return null;
+    }
+    public static DPSDelayFunction get(String playerName){
+        for (DPSDelayFunction function : DPS.getTaskSeconds().delayFunctions)
+            if(function.equalsPlayer(playerName))
                 return function;
         return null;
     }

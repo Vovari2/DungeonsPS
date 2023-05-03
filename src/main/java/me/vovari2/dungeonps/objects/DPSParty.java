@@ -77,19 +77,20 @@ public class DPSParty{
 
         updateMenuAllPlayer();
     }
-    public void removePlayer(Player player, boolean isQuit){
+    public void removePlayer(Player player, DPSStatusRP status){
         DPSPlayer dpsPlayer = getPlayer(player.getName());
         if (dpsPlayer == null)
             return;
 
-        if (isQuit){
+        if (status.equals(DPSStatusRP.QUIT)){
             fullRemovePlayer(dpsPlayer);
             return;
         }
 
-        player.closeInventory();
         TextUtils.launchCommand(DPS.getDPSCommand("extinction").replaceAll("%player%", player.getName()));
         DPSDelayFunction.add(player.getName(), "wait_after_remove_player", 2);
+        if (!status.equals(DPSStatusRP.CLOSE_INVENTORY))
+            player.closeInventory();
     }
 
     public void fullRemovePlayer(DPSPlayer dpsPlayer){
@@ -120,10 +121,6 @@ public class DPSParty{
 
         player.teleport(DPS.getDungeon(nameDungeon).getEnterOut());
         updateMenuAllPlayer();
-    }
-    public void enterInDungeons(){
-        setInDungeon(true);
-        TextUtils.launchCommand(DPS.getDPSCommand("play").replaceAll("%player%", players.get(0).getPlayer().getName()));
     }
     public void updateMenuAllPlayer(){
         for (DPSPlayer dpsPlayer : players)

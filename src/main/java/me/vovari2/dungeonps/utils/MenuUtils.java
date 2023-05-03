@@ -100,7 +100,7 @@ public class MenuUtils {
 
 
         // Инициализация переменной инвентаря
-        Inventory inventory = Bukkit.createInventory(player, 54, DPSLocale.replacePlaceHolders("menu.party_settings.name_leader",
+        Inventory inventory = Bukkit.createInventory(player, 54, DPSLocale.replacePlaceHolders("menu.party_settings.name_player",
                 new String[]{
                         "%button_ready_1%",
                         "%button_ready_2%",
