@@ -15,15 +15,8 @@ public class DPSDelayFunction {
         this.functionName = functionName;
         this.time = DPS.getTaskSeconds().getSecondAfterPeriod(period);
     }
-
-    public boolean equalsTime(){
-        return this.time == DPS.getTaskSeconds().seconds;
-    }
-    public boolean equalsPlayer(String playerName){
-        return this.playerName.equals(playerName);
-    }
-    public boolean equals(String playerName, String functionName){
-        return this.playerName.equals(playerName) && this.functionName.equals(functionName);
+    public int getTime() {
+        return time;
     }
 
     public void launchFunction(){
@@ -33,25 +26,8 @@ public class DPSDelayFunction {
         DPSPlayer dpsPlayer = party.getPlayer(playerName);
 
         switch(functionName){
-            case "wait_cooldown_notice": {
-                dpsPlayer.setWaitCoolDown(false);
-                dpsPlayer.updateMenuPlayer(party);
-            } return;
             case "wait_after_remove_player":
                 party.fullRemovePlayer(dpsPlayer); return;
-            case "teleport_enter_out": {
-                Player player = dpsPlayer.getPlayer();
-                if (player == null)
-                    return;
-                player.teleport(DPS.getDungeon(party.getNameDungeon()).getEnterOut());
-            } return;
-            case "start_dungeon": {
-                Player player = dpsPlayer.getPlayer();
-                if (player == null)
-                    return;
-                party.setInDungeon(true);
-                TextUtils.launchCommand(DPS.getDPSCommand("play").replaceAll("%player%", party.getPlayers().get(0).getPlayer().getName()));
-            } return;
             case "teleport_start_party": {
                 Player player = dpsPlayer.getPlayer();
                 if (player == null)
@@ -67,22 +43,27 @@ public class DPSDelayFunction {
                 if (dpsPlayer.isLeader())
                     MenuUtils.openPartySettingsLeader(party, dpsPlayer);
                 else MenuUtils.openPartySettingsPlayer(party, dpsPlayer);
+            } return;
+            case "wait_cooldown_notice": {
+                dpsPlayer.setWaitCoolDown(false);
+                dpsPlayer.updatePartySettings(party);
+            } return;
+            case "start_dungeon": {
+                Player player = dpsPlayer.getPlayer();
+                if (player == null)
+                    return;
+                party.setInDungeon(true);
+                TextUtils.launchCommand(DPS.getDPSCommand("play").replaceAll("%player%", party.getPlayers().get(0).getPlayer().getName()));
             }
         }
     }
 
     public static DPSDelayFunction get(String playerName, String functionName){
         for (DPSDelayFunction function : DPS.getTaskSeconds().delayFunctions)
-            if(function.equals(playerName, functionName))
+            if(function.playerName.equals(playerName) && function.functionName.equals(functionName))
                 return function;
         return null;
-    }
-    public static DPSDelayFunction get(String playerName){
-        for (DPSDelayFunction function : DPS.getTaskSeconds().delayFunctions)
-            if(function.equalsPlayer(playerName))
-                return function;
-        return null;
-    }
+    } // Возвращает задержанную функцию по имени игрока и совпадающую имени функции
     public static void add(String playerName, String functionName, int time){
         DPS.getTaskSeconds().delayFunctions.add(new DPSDelayFunction(playerName, functionName, time));
     }

@@ -4,6 +4,7 @@ import me.vovari2.dungeonps.objects.DPSDelayFunction;
 import me.vovari2.dungeonps.objects.DPSParty;
 import me.vovari2.dungeonps.objects.DPSPlayer;
 import me.vovari2.dungeonps.utils.MenuUtils;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ public class DPSTaskSeconds extends BukkitRunnable {
     public DPSTaskSeconds(){
         waitCooldownNotice = new HashMap<>();
         delayFunctions = new ArrayList<>();
+
+        lockableInventory = new HashMap<>();
     }
 
     public HashMap<String, Integer> waitCooldownNotice;
@@ -34,14 +37,19 @@ public class DPSTaskSeconds extends BukkitRunnable {
             if (party == null)
                 continue;
             DPSPlayer dpsPlayer = party.getPlayer(entry.getKey());
-            MenuUtils.setWaitCooldownNotice(dpsPlayer, dpsPlayer.getMenuSettings());
+
+            InventoryView inventoryView = dpsPlayer.getPlayer().getOpenInventory();
+            String menuName = MenuUtils.getNameMenu(inventoryView);
+            if (menuName == null || !menuName.equals("party_settings"))
+                continue;
+            MenuUtils.setWaitCooldownNotice(dpsPlayer, inventoryView.getTopInventory());
             if (entry.getValue() == seconds)
                 waitCooldownNotice.remove(entry.getKey());
         }
 
         // Функции, которые должны выполниться по окончанию периода
         delayFunctions.removeIf(delayFunction -> {
-            if (delayFunction.equalsTime()) {
+            if (delayFunction.getTime() == seconds) {
                 delayFunction.launchFunction();
                 return true;
             }
@@ -55,4 +63,16 @@ public class DPSTaskSeconds extends BukkitRunnable {
     public int getSecondsToTime(int time){
         return time < seconds ? 3600 - seconds + time : time - seconds;
     } // Количество секунд, оставшееся до вызова события
+
+
+    private final HashMap<String, Boolean> lockableInventory;
+    public static boolean containsLockableInventory(String playerName){
+        return DPS.getTaskSeconds().lockableInventory.get(playerName);
+    }
+    public static void addLockableInventory(String playerName, boolean value){
+        DPS.getTaskSeconds().lockableInventory.put(playerName, value);
+    }
+    public static void removeLockableInventory(String playerName){
+        DPS.getTaskSeconds().lockableInventory.remove(playerName);
+    }
 }

@@ -11,5 +11,6 @@ commands:
 
 depend:
   - "Parties"
+  - "MythicDungeons"
 
 

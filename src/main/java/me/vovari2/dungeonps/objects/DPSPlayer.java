@@ -4,19 +4,19 @@ import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import me.vovari2.dungeonps.DPS;
 import me.vovari2.dungeonps.utils.MenuUtils;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 public class DPSPlayer {
 
-    private final boolean isLeader;
+    private boolean isLeader;
     private boolean isReady;
     private boolean isChat;
-
     private boolean isWaitCoolDown;
+
+    private boolean useOnlyFriends;
+    private int partyPlayersPage;
 
     private final Player player;
     private final PartyPlayer partyPlayer;
-    private Inventory menuSettings;
 
     public DPSPlayer(Player player, boolean isLeader){
         this.isLeader = isLeader;
@@ -30,6 +30,9 @@ public class DPSPlayer {
     }
     public boolean isLeader() {
         return isLeader;
+    }
+    public void setLeader(boolean isLeader){
+        this.isLeader = isLeader;
     }
     public boolean isReady() {
         return isReady;
@@ -46,20 +49,28 @@ public class DPSPlayer {
     public void setChat(boolean isChat) {
         this.isChat = isChat;
         player.performCommand("party chat " + (isChat ? "on" : "off"));
-        updateMenuPlayer(DPSParty.get(player.getName()));
+        updatePartySettings(DPSParty.get(player.getName()));
     }
     public boolean isWaitCoolDown() {
         return isWaitCoolDown;
     }
     public void setWaitCoolDown(boolean isWaitCoolDown) {
         this.isWaitCoolDown = isWaitCoolDown;
-        updateMenuPlayer(DPSParty.get(player.getName()));
+        updatePartySettings(DPSParty.get(player.getName()));
     }
-    public Inventory getMenuSettings(){
-        return menuSettings;
+    public boolean isUseOnlyFriends() {
+        return useOnlyFriends;
     }
-    public void setMenuSettings(Inventory menuSettings){
-        this.menuSettings = menuSettings;
+    public void setUseOnlyFriends(boolean useOnlyFriends) {
+        this.useOnlyFriends = useOnlyFriends;
+        updatePartyPlayers();
+    }
+    public int isPartyPlayersPage() {
+        return partyPlayersPage;
+    }
+    public void setPartyPlayersPage(int partyPlayersPage) {
+        this.partyPlayersPage = partyPlayersPage;
+        updatePartyPlayers();
     }
 
     public Player getPlayer() {
@@ -69,12 +80,18 @@ public class DPSPlayer {
         return partyPlayer;
     }
 
-    public void updateMenuPlayer(DPSParty party){
-        if (MenuUtils.isNotOurMenu(MenuUtils.getNameMenu(player.getOpenInventory().getTitle())))
+    public void updatePartySettings(DPSParty party){
+        if (MenuUtils.isNotOurMenu(MenuUtils.getNameMenu(player.getOpenInventory())))
             return;
 
         if (isLeader)
             MenuUtils.openPartySettingsLeader(party, this);
         else MenuUtils.openPartySettingsPlayer(party, this);
+    }
+    public void updatePartyPlayers(){
+        if (MenuUtils.isNotOurMenu(MenuUtils.getNameMenu(player.getOpenInventory())))
+            return;
+
+        MenuUtils.openPartyPlayers(this);
     }
 }

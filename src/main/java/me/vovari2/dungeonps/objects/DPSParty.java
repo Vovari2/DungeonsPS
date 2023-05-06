@@ -4,6 +4,7 @@ import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import me.vovari2.dungeonps.DPS;
 import me.vovari2.dungeonps.DPSLocale;
+import me.vovari2.dungeonps.DPSTaskSeconds;
 import me.vovari2.dungeonps.utils.TextUtils;
 import org.bukkit.entity.Player;
 
@@ -55,6 +56,20 @@ public class DPSParty{
                 return false;
         return true;
     }
+    public void editLeader(DPSPlayer player){
+        DPSPlayer oldLeader = players.get(0);
+        oldLeader.setLeader(false);
+        players.add(oldLeader);
+        players.remove(0);
+        DPSPlayer newLeader = players.get(0);
+        newLeader.setLeader(true);
+        DPS.getPartiesAPI().createParty(newLeader.getPlayer().getName(), newLeader.getPartyPlayer());
+        party = DPS.getPartiesAPI().getParty(newLeader.getPlayer().getName());
+        if (party == null)
+            return;
+        for(DPSPlayer targetPlayer : players)
+            party.addMember(targetPlayer.getPartyPlayer());
+    }
 
     public DPSPlayer getPlayer(String playerName){
         for(DPSPlayer player : players)
@@ -77,20 +92,18 @@ public class DPSParty{
 
         updateMenuAllPlayer();
     }
-    public void removePlayer(Player player, DPSStatusRP status){
-        DPSPlayer dpsPlayer = getPlayer(player.getName());
-        if (dpsPlayer == null)
-            return;
+    public void removePlayer(DPSPlayer dpsPlayer, boolean isQuit){
+        Player player = dpsPlayer.getPlayer();
 
-        if (status.equals(DPSStatusRP.QUIT)){
+        if (isQuit){
             fullRemovePlayer(dpsPlayer);
             return;
         }
 
         TextUtils.launchCommand(DPS.getDPSCommand("extinction").replaceAll("%player%", player.getName()));
         DPSDelayFunction.add(player.getName(), "wait_after_remove_player", 2);
-        if (!status.equals(DPSStatusRP.CLOSE_INVENTORY))
-            player.closeInventory();
+        DPSTaskSeconds.addLockableInventory(player.getName(), true);
+        player.closeInventory();
     }
 
     public void fullRemovePlayer(DPSPlayer dpsPlayer){
@@ -99,6 +112,7 @@ public class DPSParty{
             if (players.size() > 1){
                 players.remove(0);
                 DPSPlayer newLeader = players.get(0);
+                newLeader.setLeader(true);
                 DPS.getPartiesAPI().createParty(newLeader.getPlayer().getName(), newLeader.getPartyPlayer());
                 party = DPS.getPartiesAPI().getParty(newLeader.getPlayer().getName());
                 if (party == null)
@@ -124,7 +138,7 @@ public class DPSParty{
     }
     public void updateMenuAllPlayer(){
         for (DPSPlayer dpsPlayer : players)
-            dpsPlayer.updateMenuPlayer(this);
+            dpsPlayer.updatePartySettings(this);
     }
 
     public static DPSParty get(String playerName){

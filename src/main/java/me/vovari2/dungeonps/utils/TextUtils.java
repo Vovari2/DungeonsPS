@@ -14,4 +14,7 @@ public class TextUtils {
     public static void launchCommand(String command){
         DPS.getInstance().getServer().dispatchCommand(DPS.getConsoleSender(), command);
     }
+    public static void launchExtinction(String playerName){
+        TextUtils.launchCommand(DPS.getDPSCommand("extinction").replaceAll("%player%", playerName));
+    }
 }

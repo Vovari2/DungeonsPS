@@ -11,14 +11,15 @@ commands:
   leave: "md leave"
 
 
+# Данжи
 dungeons:
   grim_spirit_dungeon:
     name: "Grim Spirit Dungeon"
     enter_in_distance: 2
-    enter_in_dungeon: "world -48.5 116 9.5 0 0"
-    enter_out_dungeon: "world -53.5 115 9.5 90 0"
-    party_start: "world -3.5 114 9.5 -90 0"
-    party_settings: "world 4.5 114 9.5 -90 0"
+    enter_in_dungeon: "world 88.5 141 -227.5 0 0"
+    enter_out_dungeon: "world 78.5 141 -227.5 90 0"
+    party_start: "world 76.5 140 -219.5 180 0"
+    party_settings: "world 70.5 140 -219.5 180 0"
 
 
 # Предметы
@@ -62,12 +63,17 @@ items:
       - "<!italic><#fcd294>[ЛКМ] <gray>- Выйти из пати"
 
   # Предмет кнопки, приглашение игрока
-  party_invite:
+  party_invite_leader:
     material: FEATHER
     custom_model_data: 10005
-    name: "<!italic><#94FF1A>Пригласить игрока"
+    name: "<!italic><gray>Пустой слот"
     lore:
-      - "<!italic><#fcd294>[ЛКМ] <gray>- Выбрать игрока"
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Пригласить игрока"
+  party_invite_player:
+    material: FEATHER
+    custom_model_data: 10005
+    name: "<!italic><gray>Пустой слот"
+    lore:
 
   # Предметы кнопок, готов (ready), не готов игрок в пати (not_ready) или слот с игроком пустой (undefined)
   player_ready:
@@ -129,6 +135,38 @@ items:
 
 
 
+  # Предметы кнопок для менюшки при приглашении игроков или друзей в пати
+  prev_page_on:
+    material: FEATHER
+    custom_model_data: 10004
+    name: "<!italic><#94FF1A>Предыдущая страница"
+    lore:
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Перейти к предыдующей странице"
+  prev_page_off:
+    material: FEATHER
+    custom_model_data: 10004
+    name: "<!italic><gray>Предыдущий страниц нет"
+    lore:
+  next_page_on:
+    material: FEATHER
+    custom_model_data: 10004
+    name: "<!italic><#94FF1A>Следующая страница"
+    lore:
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Перейти к следующей странице"
+  next_page_off:
+    material: FEATHER
+    custom_model_data: 10004
+    name: "<!italic><gray>Следующей страницы нет"
+    lore:
+  return_back:
+    material: FEATHER
+    custom_model_data: 10004
+    name: "<!italic><#FA2F2E>Вернуться назад"
+    lore:
+
+
+
+
 # Предметы с плейсхолдерами
 items_placeholders:
   # Предметы кнопок, используемые при отображении игроков
@@ -187,4 +225,40 @@ items_placeholders:
     name: "<!italic><gray>Уведомление для всех"
     lore:
       - "<!italic><gray>Будет доступно через: <dark_gray>%time%"
+
+  # Предметы кнопок для переключения между друзьями и игроками
+  friends_pages:
+    placeholders:
+      name:
+      lore:
+        - "%amount%"
+    material: FEATHER
+    custom_model_data: 10004
+    name: "<!italic><#94FF1A>Только друзья"
+    lore:
+      - "<!italic><gray>Друзей: <white>%amount%"
+      - ""
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Показать только друзей"
+  players_pages:
+    placeholders:
+      name:
+      lore:
+        - "%amount%"
+    material: FEATHER
+    custom_model_data: 10004
+    name: "<!italic><#94FF1A>Все игроки"
+    lore:
+      - "<!italic><gray>Игроков: <white>%amount%"
+      - ""
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Показать всех игроков"
+  head_player_in_party_players:
+    placeholders:
+      name:
+        - "%player%"
+      lore:
+    material: PLAYER_HEAD
+    custom_model_data: 1
+    name: "<!italic><#f9883a>Игрок: <white>%player%"
+    lore:
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Пригласить игрока"
 

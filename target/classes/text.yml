@@ -18,7 +18,7 @@ menu:
     name_leader: ":ps_-11::party_menu_leader::ps_-100::ps_-50::ps_-4:%button_ready_1%:ps_19:%button_ready_2%:ps_19:%button_ready_3%:ps_19:%button_ready_4%:ps_-17:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_-10::ps_11:%button_notice%:ps_1000:{party_settings}"
     name_player: ":ps_-11::party_menu_leader::ps_-100::ps_-50::ps_-4:%button_ready_1%:ps_19:%button_ready_2%:ps_19:%button_ready_3%:ps_19:%button_ready_4%:ps_-17:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_1000:{party_settings}"
   party_players:
-    name: ""
+    name: ":ps_-11:%party_menu_name%:ps_1000:{party_players}"
 
 # Прейсхолдеры для указания в менюшках
 placeholders:
@@ -44,3 +44,13 @@ placeholders:
   button_notice:
     use: ":party_notice:"
     not_use: ":party_notice_gray:"
+
+  party_players_name:
+    players: ":online_menu:"
+    friends: ":online_menu_friends:"
+  prev_page:
+    use: ""
+    not_use: ""
+  next_page:
+    use: ""
+    not_use: ""
