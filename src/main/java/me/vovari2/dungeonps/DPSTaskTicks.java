@@ -1,6 +1,7 @@
 package me.vovari2.dungeonps;
 
 import me.vovari2.dungeonps.objects.DPSDelayFunction;
+import me.vovari2.dungeonps.objects.DPSDelayInvitation;
 import me.vovari2.dungeonps.objects.DPSParty;
 import me.vovari2.dungeonps.objects.DPSPlayer;
 import me.vovari2.dungeonps.utils.MenuUtils;
@@ -12,23 +13,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DPSTaskSeconds extends BukkitRunnable {
+public class DPSTaskTicks extends BukkitRunnable {
 
-    public DPSTaskSeconds(){
+    public DPSTaskTicks(){
         waitCooldownNotice = new HashMap<>();
         delayFunctions = new ArrayList<>();
+        delayInvitations = new ArrayList<>();
 
         lockableInventory = new HashMap<>();
     }
 
     public HashMap<String, Integer> waitCooldownNotice;
     public List<DPSDelayFunction> delayFunctions;
+    public List<DPSDelayInvitation> delayInvitations;
     public int seconds;
 
     @Override
     public void run() {
         seconds++;
-        if (seconds > 3599)
+        if (seconds > 71999)
             seconds = 0;
 
         // Удаление элементов из списка ожидания кулдауна с уведомления
@@ -36,7 +39,10 @@ public class DPSTaskSeconds extends BukkitRunnable {
             DPSParty party = DPSParty.get(entry.getKey());
             if (party == null)
                 continue;
+
             DPSPlayer dpsPlayer = party.getPlayer(entry.getKey());
+            if (dpsPlayer == null)
+                continue;
 
             InventoryView inventoryView = dpsPlayer.getPlayer().getOpenInventory();
             String menuName = MenuUtils.getNameMenu(inventoryView);
@@ -55,24 +61,27 @@ public class DPSTaskSeconds extends BukkitRunnable {
             }
             return false;
         });
+
+        // Отправленные приглашения и таймауты
+        delayInvitations.removeIf(delayInvitation -> delayInvitation.getTime() == seconds);
     }
     public int getSecondAfterPeriod(int period){
         int time = seconds + period;
-        return time > 3599 ? time - 3600 : time;
+        return time > 71999 ? time - 72000 : time;
     } // Число, в какую секунду нужно вызвать событие из промежутка 0 - 3599
     public int getSecondsToTime(int time){
-        return time < seconds ? 3600 - seconds + time : time - seconds;
+        return time < seconds ? 72000 - seconds + time : time - seconds;
     } // Количество секунд, оставшееся до вызова события
 
 
     private final HashMap<String, Boolean> lockableInventory;
     public static boolean containsLockableInventory(String playerName){
-        return DPS.getTaskSeconds().lockableInventory.get(playerName);
+        return DPS.getTaskTicks().lockableInventory.get(playerName);
     }
     public static void addLockableInventory(String playerName, boolean value){
-        DPS.getTaskSeconds().lockableInventory.put(playerName, value);
+        DPS.getTaskTicks().lockableInventory.put(playerName, value);
     }
     public static void removeLockableInventory(String playerName){
-        DPS.getTaskSeconds().lockableInventory.remove(playerName);
+        DPS.getTaskTicks().lockableInventory.remove(playerName);
     }
 }

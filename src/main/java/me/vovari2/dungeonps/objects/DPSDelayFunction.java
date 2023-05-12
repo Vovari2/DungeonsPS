@@ -13,7 +13,7 @@ public class DPSDelayFunction {
     public DPSDelayFunction(String playerName, String functionName, int period){
         this.playerName = playerName;
         this.functionName = functionName;
-        this.time = DPS.getTaskSeconds().getSecondAfterPeriod(period);
+        this.time = DPS.getTaskTicks().getSecondAfterPeriod(period);
     }
     public int getTime() {
         return time;
@@ -24,6 +24,8 @@ public class DPSDelayFunction {
         if (party == null)
             return;
         DPSPlayer dpsPlayer = party.getPlayer(playerName);
+        if (dpsPlayer == null)
+            return;
 
         switch(functionName){
             case "wait_after_remove_player":
@@ -59,12 +61,16 @@ public class DPSDelayFunction {
     }
 
     public static DPSDelayFunction get(String playerName, String functionName){
-        for (DPSDelayFunction function : DPS.getTaskSeconds().delayFunctions)
+        for (DPSDelayFunction function : DPS.getTaskTicks().delayFunctions)
             if(function.playerName.equals(playerName) && function.functionName.equals(functionName))
                 return function;
         return null;
     } // Возвращает задержанную функцию по имени игрока и совпадающую имени функции
     public static void add(String playerName, String functionName, int time){
-        DPS.getTaskSeconds().delayFunctions.add(new DPSDelayFunction(playerName, functionName, time));
+        DPS.getTaskTicks().delayFunctions.add(new DPSDelayFunction(playerName, functionName, time));
+    }
+
+    public static void add(String playerName, String functionName, String periodName){
+        DPS.getTaskTicks().delayFunctions.add(new DPSDelayFunction(playerName, functionName, DPS.getPeriod(periodName)));
     }
 }

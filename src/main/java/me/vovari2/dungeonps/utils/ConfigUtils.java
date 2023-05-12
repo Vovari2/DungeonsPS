@@ -4,6 +4,8 @@ import me.vovari2.dungeonps.DPS;
 import me.vovari2.dungeonps.DPSLocale;
 import me.vovari2.dungeonps.objects.DPSDungeon;
 import me.vovari2.dungeonps.objects.DPSItemPH;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -14,6 +16,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.intellij.lang.annotations.Subst;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,23 +49,13 @@ public class ConfigUtils {
 
         loadSettings(config);
     }
+
     // Загрузка параметров основного конфига
     private static void loadSettings(FileConfiguration config) throws Exception {
         DPS plugin = DPS.getInstance();
         ConfigurationSection section;
 
-
-        // Загрузка команд для работы с другими плагинами
-        section = config.getConfigurationSection("commands");
-        if (section == null)
-            throw new Exception("Value \"commands\" must not be empty!");
-        HashMap<String, String> commands = new HashMap<>();
-        for (String path : section.getKeys(false))
-            commands.put(path, checkString(config.getString("commands." + path), path));
-        plugin.commands = commands;
-
-
-        // Загрузка всех координат
+        // Загрузка данжей
         section = config.getConfigurationSection("dungeons");
         if (section == null)
             throw new Exception("Value \"dungeons\" must not be empty!");
@@ -79,6 +72,32 @@ public class ConfigUtils {
         }
         plugin.dungeons = dungeons;
 
+        // Загрузка команд для работы с другими плагинами
+        section = config.getConfigurationSection("commands");
+        if (section == null)
+            throw new Exception("Value \"commands\" must not be empty!");
+        HashMap<String, String> commands = new HashMap<>();
+        for (String path : section.getKeys(false))
+            commands.put(path, checkString(config.getString("commands." + path), "commands." + path));
+        plugin.commands = commands;
+
+        // Загрузка значений периодов
+        section = config.getConfigurationSection("periods");
+        if (section == null)
+            throw new Exception("Value \"periods\" must not be empty!");
+        HashMap<String, Integer> periods = new HashMap<>();
+        for (String path : section.getKeys(false))
+            periods.put(path, checkInt(config.getString("periods." + path), "periods." + path));
+        plugin.periods = periods;
+
+        // Загрузка указанных звуков
+        section = config.getConfigurationSection("sounds");
+        if (section == null)
+            throw new Exception("Value \"sounds\" must not be empty!");
+        HashMap<String, Sound> sounds = new HashMap<>();
+        for (String path : section.getKeys(false))
+            sounds.put(path, loadSound(config.getString("sounds." + path), "sounds." + path));
+        plugin.sounds = sounds;
 
         // Загрузка параметров предметов
         section = config.getConfigurationSection("items");
@@ -98,7 +117,7 @@ public class ConfigUtils {
         plugin.items = items;
 
 
-        // Загрузка параметров предметов
+        // Загрузка параметров предметов, которые имеют прейсхолдеры
         section = config.getConfigurationSection("items_placeholders");
         if (section == null)
             throw new Exception("Value \"items_placeholders\" must not be empty!");
@@ -128,7 +147,19 @@ public class ConfigUtils {
         catch(Exception error){
             throw new Exception("Failed to load point \"points." + name + "\"! -> " + error.getMessage());
         }
-    }
+    } // Получение переменной Location из строки
+    private static Sound loadSound(String str, String name) throws Exception{
+        if (str == null || str.equals(""))
+            throw new Exception("Failed to load point \"" + name + "\"!");
+
+        try{
+            @Subst("") String[] arrayStr = str.trim().split(" ");
+            return Sound.sound(Key.key(arrayStr[0]), Sound.Source.PLAYER, Float.parseFloat(arrayStr[2]), Float.parseFloat(arrayStr[1]));
+        }
+        catch(Exception error){
+            throw new Exception("Failed to load point \"points." + name + "\"! -> " + error.getMessage());
+        }
+    } // Получение переменной Sound из строки
 
 
 
@@ -142,6 +173,7 @@ public class ConfigUtils {
                 "command.command_incorrectly",
                 "command.party_not_created",
                 "command.party_already_created",
+                "command.party_of_player_not_created",
                 "command.party_is_fill",
                 "menu.party_start.name"
         };
@@ -151,6 +183,9 @@ public class ConfigUtils {
 
         // Надписи, которые нужно оставить в виде строк
         array = new String[] {
+                "command.party_all_notice",
+                "command.party_invitation",
+                "command.party_already_invite",
                 "menu.party_settings.name_leader",
                 "menu.party_settings.name_player",
                 "menu.party_players.name",
@@ -169,7 +204,12 @@ public class ConfigUtils {
                 "placeholders.button_func.start",
                 "placeholders.button_notice.use",
                 "placeholders.button_notice.not_use",
-                "command.party_all_notice"
+                "placeholders.party_players_name.friends",
+                "placeholders.party_players_name.players",
+                "placeholders.prev_page.use",
+                "placeholders.prev_page.not_use",
+                "placeholders.next_page.use",
+                "placeholders.next_page.not_use"
         };
         for (String str : array)
             localeTexts.put(str, checkString(configLocale.getString(str), str));

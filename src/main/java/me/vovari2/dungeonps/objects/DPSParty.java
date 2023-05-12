@@ -4,7 +4,8 @@ import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import me.vovari2.dungeonps.DPS;
 import me.vovari2.dungeonps.DPSLocale;
-import me.vovari2.dungeonps.DPSTaskSeconds;
+import me.vovari2.dungeonps.DPSTaskTicks;
+import me.vovari2.dungeonps.utils.SoundUtils;
 import me.vovari2.dungeonps.utils.TextUtils;
 import org.bukkit.entity.Player;
 
@@ -28,14 +29,8 @@ public class DPSParty{
         addPlayer(leader, true);
     }
 
-    public Party getParty(){
-        return party;
-    }
     public String getNameDungeon(){
         return nameDungeon;
-    }
-    public boolean getInDungeon(){
-        return inDungeon;
     }
     public void setInDungeon(boolean inDungeon){
         this.inDungeon = inDungeon;
@@ -56,12 +51,11 @@ public class DPSParty{
                 return false;
         return true;
     }
-    public void editLeader(DPSPlayer player){
+    public void editLeader(DPSPlayer newLeader){
         DPSPlayer oldLeader = players.get(0);
         oldLeader.setLeader(false);
         players.add(oldLeader);
         players.remove(0);
-        DPSPlayer newLeader = players.get(0);
         newLeader.setLeader(true);
         DPS.getPartiesAPI().createParty(newLeader.getPlayer().getName(), newLeader.getPartyPlayer());
         party = DPS.getPartiesAPI().getParty(newLeader.getPlayer().getName());
@@ -101,9 +95,10 @@ public class DPSParty{
         }
 
         TextUtils.launchCommand(DPS.getDPSCommand("extinction").replaceAll("%player%", player.getName()));
-        DPSDelayFunction.add(player.getName(), "wait_after_remove_player", 2);
-        DPSTaskSeconds.addLockableInventory(player.getName(), true);
+        DPSDelayFunction.add(player.getName(), "wait_after_remove_player", 20);
+        DPSTaskTicks.addLockableInventory(player.getName(), true);
         player.closeInventory();
+        SoundUtils.play(player, "menu_close");
     }
 
     public void fullRemovePlayer(DPSPlayer dpsPlayer){

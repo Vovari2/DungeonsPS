@@ -1,4 +1,16 @@
 
+# Данжи
+dungeons:
+  grim_spirit_dungeon:
+    name: "Grim Spirit Dungeon"
+    enter_in_distance: 2
+    enter_in_dungeon: "world -47.5 115 9.5 0 0"
+    enter_out_dungeon: "world -57.5 114 9.5 90 0"
+    party_start: "world -3.5 114 9.5 0 0"
+    party_settings: "world 7.5 114 9.5 0 0"
+
+
+
 # Команды других плагинов, которые необходимы для запуска
 commands:
   # Команда для имитации эффекта затемнения
@@ -11,15 +23,27 @@ commands:
   leave: "md leave"
 
 
-# Данжи
-dungeons:
-  grim_spirit_dungeon:
-    name: "Grim Spirit Dungeon"
-    enter_in_distance: 2
-    enter_in_dungeon: "world 88.5 141 -227.5 0 0"
-    enter_out_dungeon: "world 78.5 141 -227.5 90 0"
-    party_start: "world 76.5 140 -219.5 180 0"
-    party_settings: "world 70.5 140 -219.5 180 0"
+
+# Значения периодов (в тиках)
+periods:
+  # Период выполнения команды, после потемнения
+  extinction: 25
+  # Период кулдауна у уведомления всем о приглашении
+  notice_invitation: 6000
+  # Период кулдауна у плиглашения определенного игрока
+  send_invite: 1200
+
+
+
+# Звуки в используемые в плагине (<Название звука> <Тембр (pitch)> <Громкость (volume)>)
+sounds:
+  # Нажатие на кнопку
+  button_click: "ps_sounds:ui.click_normal 1 100"
+  # Переход в другую менюшку
+  transition_click: "ps_sounds:ui.button_press 1 100"
+  # Закрытие менюшки
+  menu_close: "ps_sounds:ui.click_dead 1 100"
+
 
 
 # Предметы
@@ -145,7 +169,7 @@ items:
   prev_page_off:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><gray>Предыдущий страниц нет"
+    name: "<!italic><gray>Предыдущей страницы нет"
     lore:
   next_page_on:
     material: FEATHER

@@ -3,11 +3,15 @@ package me.vovari2.dungeonps;
 import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.PartiesAPI;
 import com.google.common.collect.ImmutableList;
+import me.vovari2.dungeonps.listeners.DPSListener;
+import me.vovari2.dungeonps.listeners.MenuClick;
 import me.vovari2.dungeonps.objects.DPSDungeon;
 import me.vovari2.dungeonps.objects.DPSItemPH;
 import me.vovari2.dungeonps.objects.DPSParty;
+import me.vovari2.dungeonps.objects.DPSPlayer;
 import me.vovari2.dungeonps.utils.ConfigUtils;
 import me.vovari2.dungeonps.utils.TextUtils;
+import net.kyori.adventure.sound.Sound;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.HandlerList;
@@ -22,15 +26,17 @@ public final class DPS extends JavaPlugin {
     private PartiesAPI partiesAPI;
     public DPSLocale locale;
 
-    public HashMap<String, ItemStack> items;
-    public HashMap<String, DPSItemPH> itemsPH;
     public HashMap<String, DPSDungeon> dungeons;
     public HashMap<String, String> commands;
+    public HashMap<String, Integer> periods;
+    public HashMap<String, Sound> sounds;
+    public HashMap<String, ItemStack> items;
+    public HashMap<String, DPSItemPH> itemsPH;
 
     public HashMap<String, DPSParty> parties;
     private ImmutableList<String> nameMenus;
 
-    private DPSTaskSeconds taskSeconds;
+    private DPSTaskTicks taskTicks;
 
     @Override
     public void onEnable() {
@@ -53,6 +59,7 @@ public final class DPS extends JavaPlugin {
             return;
         }
 
+        getServer().getPluginManager().registerEvents(new MenuClick(), this);
         getServer().getPluginManager().registerEvents(new DPSListener(), this);
 
         PluginCommand command = getCommand("dungeonps");
@@ -61,8 +68,8 @@ public final class DPS extends JavaPlugin {
             command.setTabCompleter(new DPSTabCompleter());
         }
 
-        taskSeconds = new DPSTaskSeconds();
-        taskSeconds.runTaskTimer(this, 20, 20);
+        taskTicks = new DPSTaskTicks();
+        taskTicks.runTaskTimer(this, 1, 1);
 
         TextUtils.sendInfoMessage("Plugin enabled for " + (System.currentTimeMillis() - loadingTime) + " ms");
     }
@@ -70,7 +77,13 @@ public final class DPS extends JavaPlugin {
     @Override
     public void onDisable(){
         HandlerList.unregisterAll(this);
-        taskSeconds.cancel();
+        if (taskTicks != null)
+            taskTicks.cancel();
+
+        for (DPSParty party : parties.values())
+            for(DPSPlayer dpsPlayer : party.getPlayers())
+                party.removePlayer(dpsPlayer, true);
+
         TextUtils.sendInfoMessage("Plugin disabled!");
     }
 
@@ -90,17 +103,23 @@ public final class DPS extends JavaPlugin {
         return plugin.partiesAPI;
     }
 
-    public static ItemStack getItem(String key){
-        return plugin.items.get(key);
-    }
-    public static DPSItemPH getItemPH(String key){
-        return plugin.itemsPH.get(key);
-    }
     public static DPSDungeon getDungeon(String key) {
         return plugin.dungeons.get(key);
     }
     public static String getDPSCommand(String key) {
         return plugin.commands.get(key);
+    }
+    public static int getPeriod(String key){
+        return plugin.periods.get(key);
+    }
+    public static Sound getSound(String key){
+        return plugin.sounds.get(key);
+    }
+    public static ItemStack getItem(String key){
+        return plugin.items.get(key);
+    }
+    public static DPSItemPH getItemPH(String key){
+        return plugin.itemsPH.get(key);
     }
 
     public static HashMap<String, DPSParty> getParties(){
@@ -113,7 +132,7 @@ public final class DPS extends JavaPlugin {
         return plugin.nameMenus;
     }
 
-    public static DPSTaskSeconds getTaskSeconds(){
-        return plugin.taskSeconds;
+    public static DPSTaskTicks getTaskTicks(){
+        return plugin.taskTicks;
     }
 }

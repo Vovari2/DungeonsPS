@@ -17,7 +17,7 @@ public class MenuUtils {
     public static void openPartyStart(Player player){
         Inventory inventory = Bukkit.createInventory(player, 36, DPSLocale.getLocaleComponent("menu.party_start.name"));
 
-        DPSTaskSeconds.addLockableInventory(player.getName(), false);
+        DPSTaskTicks.addLockableInventory(player.getName(), false);
         player.openInventory(inventory);
 
         ItemStack item = DPS.getItem("start_single_player");
@@ -83,7 +83,7 @@ public class MenuUtils {
             }
         }
 
-        DPSTaskSeconds.addLockableInventory(player.getName(), true);
+        DPSTaskTicks.addLockableInventory(player.getName(), true);
         player.openInventory(inventory);
 
         // Инициализация предметов
@@ -135,7 +135,7 @@ public class MenuUtils {
             }
         }
 
-        DPSTaskSeconds.addLockableInventory(player.getName(), true);
+        DPSTaskTicks.addLockableInventory(player.getName(), true);
         player.openInventory(inventory);
 
         // Инициализация предметов
@@ -157,8 +157,8 @@ public class MenuUtils {
         if (inventory == null)
             return;
         if (dpsPlayer.isWaitCoolDown()){
-            int waitSeconds = DPS.getTaskSeconds().getSecondsToTime(DPS.getTaskSeconds().waitCooldownNotice.get(dpsPlayer.getPlayer().getName()));
-            inventory.setItem(6, DPS.getItemPH("party_all_invitation_not_use").getItem(new String[]{}, new String[]{waitSeconds / 60 + ":" + (waitSeconds % 60 < 10 ? "0" : "") + waitSeconds % 60}));
+            int waitSeconds = DPS.getTaskTicks().getSecondsToTime(DPS.getTaskTicks().waitCooldownNotice.get(dpsPlayer.getPlayer().getName()));
+            inventory.setItem(6, DPS.getItemPH("party_all_invitation_not_use").getItem(new String[]{}, new String[]{waitSeconds / 1200 + ":" + (waitSeconds / 20 % 60 < 10 ? "0" : "") + (waitSeconds / 20 % 60)}));
         }
         else inventory.setItem(6, DPS.getItem("party_all_invitation_use"));
     }
@@ -167,13 +167,11 @@ public class MenuUtils {
 
     // Менюшка настроек пати для игроков
     public static void openPartyPlayers(DPSPlayer dpsPlayer){
-        List<Player> players = getPlayerOnPage(dpsPlayer.isPartyPlayersPage(),dpsPlayer);
-        if (players == null)
-            return;
+        List<Player> players = getPlayerOnPage(dpsPlayer.getPartyPlayersPage(), dpsPlayer);
         Player player = dpsPlayer.getPlayer();
 
-        List<Player> prevPage = getPlayerOnPage(dpsPlayer.isPartyPlayersPage() - 1, dpsPlayer),
-                nextPage = getPlayerOnPage(dpsPlayer.isPartyPlayersPage() + 1, dpsPlayer);
+        List<Player> prevPage = getPlayerOnPage(dpsPlayer.getPartyPlayersPage() - 1, dpsPlayer),
+                nextPage = getPlayerOnPage(dpsPlayer.getPartyPlayersPage() + 1, dpsPlayer);
 
         // Инициализация переменной инвентаря
         Inventory inventory = Bukkit.createInventory(player, 54, DPSLocale.replacePlaceHolders("menu.party_players.name",
@@ -183,39 +181,40 @@ public class MenuUtils {
                         "%next_page%"
                 } ,
                 new String[]{
-                        dpsPlayer.isUseOnlyFriends() ? DPSLocale.getLocaleString("placeholders.party_players_name.players") : DPSLocale.getLocaleString("placeholders.party_players_name.friends"),
-                        prevPage == null ? DPSLocale.getLocaleString("placeholders.prev_page.not_use") : DPSLocale.getLocaleString("placeholders.prev_page.use"),
-                        nextPage == null ? DPSLocale.getLocaleString("placeholders.next_page.not_use") : DPSLocale.getLocaleString("placeholders.next_page.use")
+                        dpsPlayer.isUseOnlyFriends() ? DPSLocale.getLocaleString("placeholders.party_players_name.friends") : DPSLocale.getLocaleString("placeholders.party_players_name.players"),
+                        prevPage.size() == 0 ? DPSLocale.getLocaleString("placeholders.prev_page.not_use") : DPSLocale.getLocaleString("placeholders.prev_page.use"),
+                        nextPage.size() == 0 ? DPSLocale.getLocaleString("placeholders.next_page.not_use") : DPSLocale.getLocaleString("placeholders.next_page.use")
                 }));
 
         for (int i = 0; i < players.size(); i++){
             Player targetPlayer = players.get(i);
-            inventory.setItem(i + 18, DPS.getItemPH("head_player_in_party_players").getItem(targetPlayer, new String[]{targetPlayer.getName()}, new String[]{}));
+            inventory.setItem(i + 9, DPS.getItemPH("head_player_in_party_players").getItem(targetPlayer, new String[]{targetPlayer.getName()}, new String[]{}));
         }
 
-        DPSTaskSeconds.addLockableInventory(player.getName(), true);
+        DPSTaskTicks.addLockableInventory(player.getName(), true);
         player.openInventory(inventory);
 
         inventory.setItem(0, DPS.getItem("return_back"));
         int size = players.size();
-        inventory.setItem(1, dpsPlayer.isUseOnlyFriends() ? DPS.getItemPH("friends_pages").getItem(new String[]{}, new String[]{String.valueOf(size)}) : DPS.getItemPH("players_pages").getItem(new String[]{}, new String[]{String.valueOf(size)}));
-        ItemStack item = prevPage == null ? DPS.getItem("prev_page_off") : DPS.getItem("prev_page_on");
+        inventory.setItem(1, dpsPlayer.isUseOnlyFriends() ? DPS.getItemPH("players_pages").getItem(new String[]{}, new String[]{String.valueOf(size)}) : DPS.getItemPH("friends_pages").getItem(new String[]{}, new String[]{String.valueOf(size)}));
+        ItemStack item = prevPage.size() == 0 ? DPS.getItem("prev_page_off") : DPS.getItem("prev_page_on");
         inventory.setItem(5, item);
         inventory.setItem(6, item);
-        item = prevPage == null ? DPS.getItem("next_page_off") : DPS.getItem("next_page_on");
+        item = nextPage.size() == 0 ? DPS.getItem("next_page_off") : DPS.getItem("next_page_on");
         inventory.setItem(7, item);
         inventory.setItem(8, item);
     }
-    private static List<Player> getPlayerOnPage(int page, DPSPlayer dpsPlayer){
+    public static List<Player> getPlayerOnPage(int page, DPSPlayer dpsPlayer){
         List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers()),
                 players = new ArrayList<>();
-        int size = onlinePlayers.size() - 1;
 
-        if (size / 45 < page || size % 45 == 0)
-            return null;
+        int size = onlinePlayers.size();
+
+        if (page < 0 || size < page * 45 + 1)
+            return players;
 
         int max = (page + 1) * 45;
-        for (int i = page * 45; i < max && i <= size; i++)
+        for (int i = page * 45; i < max && i < size; i++)
             players.add(onlinePlayers.get(i));
         return players;
     }

@@ -5,6 +5,8 @@ import me.vovari2.dungeonps.DPS;
 import me.vovari2.dungeonps.utils.MenuUtils;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
+
 public class DPSPlayer {
 
     private boolean isLeader;
@@ -23,7 +25,7 @@ public class DPSPlayer {
         isReady = false;
         isChat = false;
 
-        isWaitCoolDown = DPS.getTaskSeconds().waitCooldownNotice.containsKey(player.getName());
+        isWaitCoolDown = DPS.getTaskTicks().waitCooldownNotice.containsKey(player.getName());
 
         this.player = player;
         partyPlayer = DPS.getPartiesAPI().getPartyPlayer(player.getUniqueId());
@@ -65,7 +67,7 @@ public class DPSPlayer {
         this.useOnlyFriends = useOnlyFriends;
         updatePartyPlayers();
     }
-    public int isPartyPlayersPage() {
+    public int getPartyPlayersPage() {
         return partyPlayersPage;
     }
     public void setPartyPlayersPage(int partyPlayersPage) {
@@ -81,7 +83,7 @@ public class DPSPlayer {
     }
 
     public void updatePartySettings(DPSParty party){
-        if (MenuUtils.isNotOurMenu(MenuUtils.getNameMenu(player.getOpenInventory())))
+        if (!Objects.equals(MenuUtils.getNameMenu(player.getOpenInventory()), "party_settings"))
             return;
 
         if (isLeader)
@@ -89,7 +91,7 @@ public class DPSPlayer {
         else MenuUtils.openPartySettingsPlayer(party, this);
     }
     public void updatePartyPlayers(){
-        if (MenuUtils.isNotOurMenu(MenuUtils.getNameMenu(player.getOpenInventory())))
+        if (!Objects.equals(MenuUtils.getNameMenu(player.getOpenInventory()), "party_players"))
             return;
 
         MenuUtils.openPartyPlayers(this);

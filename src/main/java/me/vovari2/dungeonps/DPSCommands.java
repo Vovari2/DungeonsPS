@@ -1,8 +1,10 @@
 package me.vovari2.dungeonps;
 
+import me.vovari2.dungeonps.objects.DPSDelayFunction;
 import me.vovari2.dungeonps.objects.DPSParty;
 import me.vovari2.dungeonps.objects.DPSPlayer;
 import me.vovari2.dungeonps.utils.MenuUtils;
+import me.vovari2.dungeonps.utils.SoundUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,20 +18,24 @@ public class DPSCommands implements CommandExecutor {
     }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!sender.hasPermission("dungeonps.player"))
+            return true;
+
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(DPSLocale.getLocaleComponent("command.can_use_only_player"));
+            return true;
+        }
+        Player player = (Player) sender;
+        String playerName = player.getName();
 
         // Проверка, если нет параметров
         if (args.length == 0){
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(DPSLocale.getLocaleComponent("command.can_use_only_player"));
-                return true;
-            }
-            Player player = (Player) sender;
-            DPSParty party = DPSParty.get(player.getName());
+            DPSParty party = DPSParty.get(playerName);
             if (party == null){
                 player.sendMessage(DPSLocale.getLocaleComponent("command.party_not_created"));
                 return true;
             }
-            DPSPlayer dpsPlayer = party.getPlayer(player.getName());
+            DPSPlayer dpsPlayer = party.getPlayer(playerName);
             if (dpsPlayer.isLeader())
                 MenuUtils.openPartySettingsLeader(party, dpsPlayer);
             else MenuUtils.openPartySettingsPlayer(party, dpsPlayer);
@@ -43,52 +49,29 @@ public class DPSCommands implements CommandExecutor {
         }
 
         switch(args[0]) {
-            // Команда /dps reload
-            case "reload": {
-                if (!sender.hasPermission("dungeonps.admin"))
-                    return true;
-                if (args.length != 1) {
-                    sender.sendMessage(DPSLocale.getLocaleComponent("command.command_incorrectly"));
-                    return true;
-                }
-
-                plugin.onDisable();
-                plugin.onEnable();
-                sender.sendMessage(DPSLocale.getLocaleComponent("command.plugin_reload"));
-            } return true;
-
             // Команда /dps accept <Игрок>
             case "accept": {
-                if (!sender.hasPermission("dungeonps.admin") && !sender.hasPermission("dungeonps.admin"))
-                    return true;
-                if (args.length != 2) {
-                    sender.sendMessage(DPSLocale.getLocaleComponent("command.command_incorrectly"));
-                    return true;
-                }
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(DPSLocale.getLocaleComponent("command.can_use_only_player"));
+                DPSParty party = DPSParty.get(args[1]);
+
+                if (party == null){
+                    player.sendMessage(DPSLocale.getLocaleComponent("command.party_of_player_not_created"));
                     return true;
                 }
-                Player player = (Player) sender;
+                if (party.getPlayers().size() == 4){
+                    player.sendMessage(DPSLocale.getLocaleComponent("command.party_is_fill"));
+                    return true;
+                }
+
+                if (party.getPlayer(playerName) != null){
+                    player.sendMessage(DPSLocale.getLocaleComponent("command.party_already_created"));
+                    return true;
+                }
+
+                DPSDelayFunction.add(playerName, "teleport_settings_party", "extinction");
+                party.addPlayer(player, false);
+                SoundUtils.play(player, "button_click");
 
                 // Тут будет принятие приглашения в пати
-            } return true;
-
-            // Команда /dps decline <Игрок>
-            case "decline":{
-                if (!sender.hasPermission("dungeonps.admin") && !sender.hasPermission("dungeonps.admin"))
-                    return true;
-                if (args.length != 2) {
-                    sender.sendMessage(DPSLocale.getLocaleComponent("command.command_incorrectly"));
-                    return true;
-                }
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(DPSLocale.getLocaleComponent("command.can_use_only_player"));
-                    return true;
-                }
-                Player player = (Player) sender;
-
-                // Тут будет отклонение приглашения в пати
             } return true;
             default: sender.sendMessage(DPSLocale.getLocaleComponent("command.command_incorrectly")); return true;
         }

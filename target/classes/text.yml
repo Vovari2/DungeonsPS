@@ -5,9 +5,12 @@ command:
   dont_have_permission: ":error_red: <#FA2F2E>Нет прав доступа для использования этой команды!"
   command_incorrectly: ":error_red: <#FA2F2E>Команда введена неверно!"
   party_not_created: ":error_red: <#FA2F2E>Вы не находитесь в пати!"
+  party_of_player_not_created: ":error_red: <#FA2F2E>У игрока нет пати!"
   party_already_created: ":error_yellow: <#c5b500>Вы уже находитесь в пати!"
   party_is_fill: ":error_red: <#FA2F2E>Пати заполнено!"
-  party_all_notice: "\n:dungeons_icon: <white>%player% <#7289da>собирает группу в данж <underlined><#b8ddfc>Grim Spirit Dungeon<reset>\n:dungeons_icon: <#42c6ea>[Присоединиться]"
+  party_all_notice: "\n:error_yellow: <white>%player% <#ffd138>собирает группу в данж <underlined><#fffbd1>%dungeon%<reset>\n:error_yellow: <#85cc16>[Присоединиться]\n"
+  party_invitation: "\n:dungeons_icon: <white>%player% <#7289da>приглашает вас в группу \n:dungeons_icon: <#7289da>Для прохождения данжа <underlined><#88e3f6>%dungeon%<reset> \n:dungeons_icon: <#0ea6e9><click:run_command:/dps accept %player%>[Принять]</click>\n"
+  party_already_invite: "\n:error_red: <#FA2F2E>Вы уже отправили данному игроку приглашение! \n:error_red: <#FA2F2E>Сможете отправить только через <#f5c06d>%time% <#FA2F2E>секунд\n"
 
 
 # Название менюшек в плагине, в данных используются плейсхолдеры, которые можно задать в разделе placeholders
@@ -18,7 +21,7 @@ menu:
     name_leader: ":ps_-11::party_menu_leader::ps_-100::ps_-50::ps_-4:%button_ready_1%:ps_19:%button_ready_2%:ps_19:%button_ready_3%:ps_19:%button_ready_4%:ps_-17:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_-10::ps_11:%button_notice%:ps_1000:{party_settings}"
     name_player: ":ps_-11::party_menu_leader::ps_-100::ps_-50::ps_-4:%button_ready_1%:ps_19:%button_ready_2%:ps_19:%button_ready_3%:ps_19:%button_ready_4%:ps_-17:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_1000:{party_settings}"
   party_players:
-    name: ":ps_-11:%party_menu_name%:ps_1000:{party_players}"
+    name: ":ps_-11:%party_menu_name%:ps_-50::ps_-20::ps_-12:%prev_page%:ps_-2::ps_3:%next_page%:ps_1000:{party_players}"
 
 # Прейсхолдеры для указания в менюшках
 placeholders:
@@ -49,8 +52,8 @@ placeholders:
     players: ":online_menu:"
     friends: ":online_menu_friends:"
   prev_page:
-    use: ""
-    not_use: ""
+    use: ":online_prev:"
+    not_use: ":online_prev_gray:"
   next_page:
-    use: ""
-    not_use: ""
+    use: ":online_next:"
+    not_use: ":online_next_gray:"
