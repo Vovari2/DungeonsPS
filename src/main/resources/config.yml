@@ -147,9 +147,9 @@ items:
   start_multiplayer_player:
     material: FEATHER
     custom_model_data: 10004
-    name: "<!italic><#94FF1A>Коорпоротивное прохождение данжа"
+    name: "<!italic><#94FF1A>Кооперативное прохождение данжа"
     lore:
-      - "<!italic><#fcd294>[ЛКМ] <gray>- Создать пати для своих друзей"
+      - "<!italic><#fcd294>[ЛКМ] <gray>- Создать пати"
   start_return_back:
     material: FEATHER
     custom_model_data: 10004

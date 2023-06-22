@@ -15,31 +15,43 @@ import java.util.List;
 public class MenuUtils {
     // Менюшка с выбором одиночного или коорперативного прохождения данжа
     public static void openPartyStart(Player player){
-        Inventory inventory = Bukkit.createInventory(player, 36, DPSLocale.getLocaleComponent("menu.party_start.name"));
+        Inventory inventory = Bukkit.createInventory(player, 54, DPSLocale.getLocaleComponent("menu.party_start.name"));
 
         DPSTaskTicks.addLockableInventory(player.getName(), false);
         player.openInventory(inventory);
 
         ItemStack item = DPS.getItem("start_single_player");
-        inventory.setItem(1, item);
-        inventory.setItem(2, item);
-        inventory.setItem(3, item);
+        inventory.setItem(9, item);
         inventory.setItem(10, item);
         inventory.setItem(11, item);
         inventory.setItem(12, item);
+        inventory.setItem(18, item);
+        inventory.setItem(19, item);
+        inventory.setItem(20, item);
+        inventory.setItem(21, item);
+        inventory.setItem(27, item);
+        inventory.setItem(28, item);
+        inventory.setItem(29, item);
+        inventory.setItem(30, item);
 
         item = DPS.getItem("start_multiplayer_player");
-        inventory.setItem(5, item);
-        inventory.setItem(6, item);
-        inventory.setItem(7, item);
         inventory.setItem(14, item);
         inventory.setItem(15, item);
         inventory.setItem(16, item);
+        inventory.setItem(17, item);
+        inventory.setItem(23, item);
+        inventory.setItem(24, item);
+        inventory.setItem(25, item);
+        inventory.setItem(26, item);
+        inventory.setItem(32, item);
+        inventory.setItem(33, item);
+        inventory.setItem(34, item);
+        inventory.setItem(35, item);
 
         item = DPS.getItem("start_return_back");
-        inventory.setItem(30, item);
-        inventory.setItem(31, item);
-        inventory.setItem(32, item);
+        inventory.setItem(48, item);
+        inventory.setItem(49, item);
+        inventory.setItem(50, item);
     }
 
 
@@ -55,8 +67,11 @@ public class MenuUtils {
                 new String[]{
                         "%button_ready_1%",
                         "%button_ready_2%",
+                        "%frame_ready_2%",
                         "%button_ready_3%",
+                        "%frame_ready_3%",
                         "%button_ready_4%",
+                        "%frame_ready_4%",
                         "%button_chat%",
                         "%button_func%",
                         "%button_notice%"
@@ -64,8 +79,11 @@ public class MenuUtils {
                 new String[]{
                         getButtonReady(listPlayers, 1),
                         getButtonReady(listPlayers, 2),
+                        getCellFrame(listPlayers, 2),
                         getButtonReady(listPlayers, 3),
+                        getCellFrame(listPlayers, 3),
                         getButtonReady(listPlayers, 4),
+                        getCellFrame(listPlayers, 4),
                         leader.isChat() ? DPSLocale.getLocaleString("placeholders.button_chat.use") : DPSLocale.getLocaleString("placeholders.button_chat.not_use"),
                         party.allIsReady() ? DPSLocale.getLocaleString("placeholders.button_func.start") : leader.isReady() ? DPSLocale.getLocaleString("placeholders.button_func.cancel") : DPSLocale.getLocaleString("placeholders.button_func.ready"),
                         leader.isWaitCoolDown() ? DPSLocale.getLocaleString("placeholders.button_notice.not_use") : DPSLocale.getLocaleString("placeholders.button_notice.use")
@@ -108,16 +126,22 @@ public class MenuUtils {
                 new String[]{
                         "%button_ready_1%",
                         "%button_ready_2%",
+                        "%frame_ready_2%",
                         "%button_ready_3%",
+                        "%frame_ready_3%",
                         "%button_ready_4%",
+                        "%frame_ready_4%",
                         "%button_chat%",
                         "%button_func%"
                 } ,
                 new String[]{
                         getButtonReady(listPlayers, 1),
                         getButtonReady(listPlayers, 2),
+                        getCellFrame(listPlayers, 2),
                         getButtonReady(listPlayers, 3),
+                        getCellFrame(listPlayers, 3),
                         getButtonReady(listPlayers, 4),
+                        getCellFrame(listPlayers, 4),
                         dpsPlayer.isChat() ? DPSLocale.getLocaleString("placeholders.button_chat.use") : DPSLocale.getLocaleString("placeholders.button_chat.not_use"),
                         dpsPlayer.isReady() ? DPSLocale.getLocaleString("placeholders.button_func.cancel") : DPSLocale.getLocaleString("placeholders.button_func.ready")
                 }));
@@ -151,6 +175,9 @@ public class MenuUtils {
     // Формирование кнопки готов у игрока
     private static String getButtonReady(List<DPSPlayer> listPlayers, int number){
         return listPlayers.size() >= number && listPlayers.get(number-1).isReady() ? DPSLocale.getLocaleString("placeholders.button_ready_" + number + ".ready") : DPSLocale.getLocaleString("placeholders.button_ready_" + number + ".not_ready");
+    }
+    private static String getCellFrame(List<DPSPlayer> listPlayers, int number){
+        return listPlayers.size() >= number ? DPSLocale.getLocaleString("placeholders.frame_ready_" + number + ".use") : DPSLocale.getLocaleString("placeholders.frame_ready_" + number + ".not_use");
     }
     // Формирование кнопки уведомить всех
     public static void setWaitCooldownNotice(DPSPlayer dpsPlayer, Inventory inventory){

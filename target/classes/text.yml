@@ -9,17 +9,17 @@ command:
   party_already_created: ":error_yellow: <#c5b500>Вы уже находитесь в пати!"
   party_is_fill: ":error_red: <#FA2F2E>Пати заполнено!"
   party_all_notice: "\n:error_yellow: <white>%player% <#ffd138>собирает группу в данж <underlined><#fffbd1>%dungeon%<reset>\n:error_yellow: <#85cc16>[Присоединиться]\n"
-  party_invitation: "\n:dungeons_icon: <white>%player% <#7289da>приглашает вас в группу \n:dungeons_icon: <#7289da>Для прохождения данжа <underlined><#88e3f6>%dungeon%<reset> \n:dungeons_icon: <#0ea6e9><click:run_command:/dps accept %player%>[Принять]</click>\n"
+  party_invitation: "\n:dungeons_icon: <white>%player% <#7289da>приглашает вас в группу \n:dungeons_icon: <#7289da>Для прохождения данжа <underlined><#88e3f6>%dungeon%<reset>\n:dungeons_icon: <#0ea6e9><click:run_command:/dps accept %player%>[Принять]</click>\n"
   party_already_invite: "\n:error_red: <#FA2F2E>Вы уже отправили данному игроку приглашение! \n:error_red: <#FA2F2E>Сможете отправить только через <#f5c06d>%time% <#FA2F2E>секунд\n"
 
 
 # Название менюшек в плагине, в данных используются плейсхолдеры, которые можно задать в разделе placeholders
 menu:
   party_start:
-    name: ":ps_-8::start_dungeon::ps_1000:{party_start}"
+    name: ":ps_-11::start_dungeon::ps_-100::ps_-50::ps_-20::ps_-4::start_dungeon_background_solo::ps_15::start_dungeon_background_coop::ps_1000:{party_start}"
   party_settings:
-    name_leader: ":ps_-11::party_menu_leader::ps_-100::ps_-50::ps_-4:%button_ready_1%:ps_19:%button_ready_2%:ps_19:%button_ready_3%:ps_19:%button_ready_4%:ps_-17:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_-10::ps_11:%button_notice%:ps_1000:{party_settings}"
-    name_player: ":ps_-11::party_menu_leader::ps_-100::ps_-50::ps_-4:%button_ready_1%:ps_19:%button_ready_2%:ps_19:%button_ready_3%:ps_19:%button_ready_4%:ps_-17:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_1000:{party_settings}"
+    name_leader: ":ps_-11::party_menu_leader::ps_-100::ps_-50::ps_-4:%button_ready_1%:ps_19:%button_ready_2%:ps_-20:%frame_ready_2%:ps_16:%button_ready_3%:ps_-20:%frame_ready_3%:ps_16:%button_ready_4%:ps_-20:%frame_ready_4%:ps_-20:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_-10::ps_11:%button_notice%:ps_1000:{party_settings}"
+    name_player: ":ps_-11::party_menu_leader::ps_-100::ps_-50::ps_-4:%button_ready_1%:ps_19:%button_ready_2%:ps_-20:%frame_ready_2%:ps_16:%button_ready_3%:ps_-20:%frame_ready_3%:ps_16:%button_ready_4%:ps_-20:%frame_ready_4%:ps_-20:%button_chat%:ps_-50::ps_-30::ps_-9:%button_func%:ps_1000:{party_settings}"
   party_players:
     name: ":ps_-11:%party_menu_name%:ps_-50::ps_-20::ps_-12:%prev_page%:ps_-2::ps_3:%next_page%:ps_1000:{party_players}"
 
@@ -31,12 +31,21 @@ placeholders:
   button_ready_2:
     ready: ":party_accept:"
     not_ready: ":party_accept_gray:"
+  frame_ready_2:
+    use: ":party_frame_player:"
+    not_use: ":party_frame_player_empty:"
   button_ready_3:
     ready: ":party_accept:"
     not_ready: ":party_accept_gray:"
+  frame_ready_3:
+    use: ":party_frame_player:"
+    not_use: ":party_frame_player_empty:"
   button_ready_4:
     ready: ":party_accept:"
     not_ready: ":party_accept_gray:"
+  frame_ready_4:
+    use: ":party_frame_player:"
+    not_use: ":party_frame_player_empty:"
   button_chat:
     use: ":party_chat:"
     not_use: ":party_chat_gray:"

@@ -36,6 +36,10 @@ public class DPSCommands implements CommandExecutor {
                 return true;
             }
             DPSPlayer dpsPlayer = party.getPlayer(playerName);
+            if (dpsPlayer == null){
+                player.sendMessage(DPSLocale.getLocaleComponent("command.party_not_created"));
+                return true;
+            }
             if (dpsPlayer.isLeader())
                 MenuUtils.openPartySettingsLeader(party, dpsPlayer);
             else MenuUtils.openPartySettingsPlayer(party, dpsPlayer);

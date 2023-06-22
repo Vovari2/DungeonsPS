@@ -127,6 +127,8 @@ public class DPSListener implements Listener {
         if (dpsPlayer == null)
             return;
 
+
+
         party.removePlayer(dpsPlayer, false);
     }
 }
